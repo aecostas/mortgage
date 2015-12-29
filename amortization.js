@@ -1,59 +1,56 @@
 "use strict";
 
-function updateNumberOfPayments(pending, payment) {
-    let N=-1* Math.log( 1 - pending*interes/(payment*100)) / (Math.log(1 + interes/100))
+function updateNumberOfPayments(pending, payment, interest) {
+    let N=-1* Math.log( 1 - pending*interest/(payment*100)) / (Math.log(1 + interest/100))
     return N
 }
 
-function amortizado(cuota, interes, mesespagados, numberofpayments) {
-    let value = cuota * (1 - Math.pow(1+interes/100.0, mesespagados-numberofpayments )) / (interes/100.0)
+function amortizado(payment, interest, paidmonths, numberofpayments) {
+    let value = payment * (1 - Math.pow(1+interest/100.0, paidmonths-numberofpayments )) / (interest/100.0)
     return value
 }
 
-function calculate(hipoteca, interes, plazo) {
-    let N = plazo
-    let pagadas=1
-    let currentMonth=0
-    let capital = hipoteca
-
-    let cuota = capital*interes/(100*(1 - Math.pow((1+interes/100), -plazo) ))
+function calculate(mortgage, interest, term) {
+    let N = term
+    let currentMonth=1
+    let capital = mortgage
+    let totalPayment = 0
+    let payment = capital*interest/(100*(1 - Math.pow((1+interest/100), -term) ))
 
     while (N>0) {
-	let a_n_new = amortizado(cuota, interes, pagadas-1, pagadas-1+N)
+	let a_n_new = amortizado(payment, interest, currentMonth-1, currentMonth-1+N)
 	let a_n = capital - a_n_new
-	pagadas += 1
 	capital = a_n_new
 	if ((currentMonth!=0) && ((currentMonth % 3) == 0)) {
             let amount = 0
-            let prev = N
             capital -= amount
-            sumacuotas += amount
-            N = updateNumberOfPayments(capital, cuota)
+            totalPayment += amount
+            N = updateNumberOfPayments(capital, payment, interest)
 	}
 
-	sumacuotas += cuota
+	totalPayment += payment
 	N -= 1
-	console.log(`${currentMonth} Capital: ${capital}\tCuota: ${cuota}\tAmortizacion: ${a_n}`)
+	console.log(`${currentMonth} Capital: ${capital}\tCuota: ${payment}\tAmortizacion: ${a_n}`)
 	currentMonth +=1
     } // while
-    return cuota
+
+    return {payment: payment, total: totalPayment}
 
 }// calculate
 
 
-let hipoteca = 100000
-let interes = 1.2/12
-let plazo = 360
-let sumacuotas = 0
+let _mortgage = 100000
+let _interest = 1.2/12
+let _plazo = 360
+let _sumacuotas = 0
 
-let cuota = calculate(hipoteca, interes, plazo)
+let _payment = calculate(_mortgage, _interest, _plazo)
 
-console.log ("Cuota: " + cuota)
-console.log ("Hipoteca: " + hipoteca)
-console.log ("Pagado al banco: " + sumacuotas)
-console.log ("Intereses: " + (sumacuotas - hipoteca))
+console.log ("Cuota: " + _payment.payment)
+console.log ("Hipoteca: " + _mortgage)
+console.log ("Pagado al banco: " + _payment.total)
+console.log ("Intereses: " + (_payment.total - _mortgage))
 
 // TODO: 
-//    * translate to english
 //    * model types of partial amortizations (periodic, punctual, etc) and decouple it from while
 //    * calculate returns json with monthly payments
