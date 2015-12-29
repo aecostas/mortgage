@@ -14,43 +14,50 @@ function calculate(mortgage, interest, term) {
     let N = term
     let currentMonth=1
     let capital = mortgage
-    let totalPayment = 0
     let payment = capital*interest/(100*(1 - Math.pow((1+interest/100), -term) ))
+    let monthlyPayments = []
 
     while (N>0) {
+	let extra=0
 	let a_n_new = amortizado(payment, interest, currentMonth-1, currentMonth-1+N)
 	let a_n = capital - a_n_new
 	capital = a_n_new
 	if ((currentMonth!=0) && ((currentMonth % 3) == 0)) {
             let amount = 0
             capital -= amount
-            totalPayment += amount
             N = updateNumberOfPayments(capital, payment, interest)
+	    extra=amount
 	}
 
-	totalPayment += payment
 	N -= 1
-	console.log(`${currentMonth} Capital: ${capital}\tCuota: ${payment}\tAmortizacion: ${a_n}`)
+	monthlyPayments.push({month: currentMonth, capital: capital, payment: payment, amortization: a_n, extra: extra})
 	currentMonth +=1
     } // while
 
-    return {payment: payment, total: totalPayment}
+    return {payment:payment, months:monthlyPayments}
 
 }// calculate
-
 
 let _mortgage = 100000
 let _interest = 1.2/12
 let _plazo = 360
 let _sumacuotas = 0
 
-let _payment = calculate(_mortgage, _interest, _plazo)
+let _payments = calculate(_mortgage, _interest, _plazo)
 
-console.log ("Cuota: " + _payment.payment)
+
+
+let total = _payments.months.reduce(function(prev, current, index, vector) {
+    return {payment: prev.payment + current.payment + current.extra}
+});
+
+console.log(_payments)
+console.log ("Cuota: " + _payments.payment)
 console.log ("Hipoteca: " + _mortgage)
-console.log ("Pagado al banco: " + _payment.total)
-console.log ("Intereses: " + (_payment.total - _mortgage))
+console.log ("Pagado al banco: " + total.payment)
+console.log ("Intereses: " + (total.payment - _mortgage))
 
 // TODO: 
 //    * model types of partial amortizations (periodic, punctual, etc) and decouple it from while
-//    * calculate returns json with monthly payments
+//    * REST API
+//    * documentation!!
