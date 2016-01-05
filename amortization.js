@@ -1,4 +1,10 @@
 "use strict";
+var express = require('express');
+var app = express();
+var json = require('express-json');
+
+app.use(json())
+app.use(express.static('public'))
 
 /**
  * Returns the number of pending payments
@@ -32,11 +38,11 @@ function amortized(payment, interest, paidmonths, numberofpayments) {
  * @param {object} partial_amortization - 
  */
 function performPartialAmortization(partial_amortization, currentMonth) {
+    if (currentMonth == 0) return false
+
     return ((partial_amortization.type == "periodic") &&
-	    (currentMonth!=0)  &&
 	    ((currentMonth % partial_amortization.period) == 0)) ||
 	((partial_amortization.type == "extra") &&
-	 (currentMonth!=0) && 
 	 (currentMonth == partial_amortization.month))
 }
 
@@ -54,6 +60,7 @@ function calculate(mortgage, interest, term, partial_amortization) {
     let capital = mortgage
     let payment = capital*interest/(100*(1 - Math.pow((1+interest/100), -term) ))
     let monthlyPayments = []
+    let sumInterest = 0
 
     while (N>0) {
 	let extra=0
@@ -66,8 +73,19 @@ function calculate(mortgage, interest, term, partial_amortization) {
 	    extra=partial_amortization.amount
 	}
 
+	sumInterest+=payment - a_n;
+
+	monthlyPayments.push({
+	    month: currentMonth,
+	    capital: capital,
+	    payment: payment,
+	    amortization: a_n,
+	    interest:payment - a_n,
+	    sumInterest: sumInterest,
+	    extra: extra
+	})
+
 	N -= 1
-	monthlyPayments.push({month: currentMonth, capital: capital, payment: payment, amortization: a_n, extra: extra})
 	currentMonth +=1
     } // while
 
@@ -75,25 +93,56 @@ function calculate(mortgage, interest, term, partial_amortization) {
 
 }// calculate
 
-let _mortgage = 100000
-let _interest = 1.2/12
-let _plazo = 360
-let _sumacuotas = 0
 
-let partial = {type: "periodic", period: 4, amount: 1000}
-let partial2 = {type: "extra", month: 10, amount: 1000}
 
-let _payments = calculate(_mortgage, _interest, _plazo, partial)
+app.get('/', function (req, res) {
+    let _mortgage
+    let _interest
+    let _monthlyInterest
+    let _term
+    let _amortization
+    let _sumacuotas = 0
 
-let total = _payments.months.reduce(function(prev, current, index, vector) {
-    return {payment: prev.payment + current.payment + current.extra}
+    _mortgage = req.query['mortgage']
+    _interest = req.query['interest']
+    _term = req.query['term']
+//    _amortization = JSON.parse(req.query['amortization'])
+
+    if ((_mortgage === undefined) || 
+	(_term === undefined) ||
+	(_interest === undefined)) {
+	res.status(400)
+	res.send("Bad request - term, mortgage or interest undefined")
+	return
+    }    
+
+    let partial = {type: "periodic", period: 3, amount: 1000}
+    let partial2 = {type: "extra", month: 10, amount: 1000}
+    let partial3 = {}
+
+    _monthlyInterest = _interest/12
+
+    let _payments = calculate(_mortgage, _monthlyInterest, _term, partial)
+
+    let total = _payments.months.reduce(function(prev, current, index, vector) {
+	return {payment: prev.payment + current.payment + current.extra}
+    });
+
+//    console.log(_payments)
+    console.log ("Cuota: " + _payments.payment)
+    console.log ("Hipoteca: " + _mortgage)
+    console.log ("Pagado al banco: " + total.payment)
+    console.log ("Intereses: " + (total.payment - _mortgage))
+
+    res.send(_payments);
 });
 
-console.log(_payments)
-console.log ("Cuota: " + _payments.payment)
-console.log ("Hipoteca: " + _mortgage)
-console.log ("Pagado al banco: " + total.payment)
-console.log ("Intereses: " + (total.payment - _mortgage))
+var server = app.listen(8000, function () {
+  var host = server.address().address;
+  var port = server.address().port;
+
+  console.log('Example app listening at http://%s:%s', host, port);
+});
 
 // TODO: 
 //    * REST API
