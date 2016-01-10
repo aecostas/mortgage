@@ -2,6 +2,7 @@
 var express = require('express');
 var app = express();
 var json = require('express-json');
+var savings = 300
 
 app.use(json())
 app.use(express.static('public'))
@@ -62,6 +63,8 @@ function calculate(mortgage, interest, term, partial_amortizations) {
     let payment = capital*interest/(100*(1 - Math.pow((1+interest/100), -term) ))
     let monthlyPayments = []
     let sumInterest = 0
+    let sumSavings = 0
+    let sumSavingsCPI = 0
 
     while (N>0) {
 	let extra=0
@@ -80,6 +83,11 @@ function calculate(mortgage, interest, term, partial_amortizations) {
 
 	sumInterest+=payment - a_n;
 
+	// savings
+	sumSavingsCPI -= sumSavingsCPI*0.02/12
+	sumSavingsCPI += savings
+	sumSavings += savings
+
 	monthlyPayments.push({
 	    month: currentMonth,
 	    capital: capital,
@@ -87,6 +95,8 @@ function calculate(mortgage, interest, term, partial_amortizations) {
 	    amortization: a_n,
 	    interest:payment - a_n,
 	    sumInterest: sumInterest,
+	    sumSavings: sumSavings,
+	    sumSavingsCPI: parseInt(sumSavingsCPI),
 	    extra: extra
 	})
 
@@ -162,5 +172,4 @@ var server = app.listen(8000, function () {
 });
 
 // TODO: 
-//    * REST API
 //    * modelar liquidar de golpe (cuando el capital pendiente sea igual a una cantidad dada)
