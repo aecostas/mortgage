@@ -2,10 +2,56 @@
 var express = require('express');
 var app = express();
 var json = require('express-json');
-var savings = 300
+var savings = 500
 
 app.use(json())
 app.use(express.static('public'))
+
+class CouponStrategy {
+    constructor(deposit, fund, initialmonth, duration, account) {
+	this.deposit = Array(duration).fill(deposit)
+	this.fund = Array(duration).fill(fund)
+	this.output = deposit/12
+	this.input = deposit/12 - (deposit/12)*0.05
+	this.deposit[0] = deposit
+	this.fund[0] = fund
+
+	for (var month=1; month<duration; month++) {
+	    if (month<13) {
+		this.deposit[month] = this.deposit[month-1] -this.output
+	    }
+
+	    this.fund[month] = this.fund[month-1] + this.input
+	    
+	    // dividend
+	    if (month%3 == 0) {
+		console.warn("Dividend: " + this.fund[month]*0.009)
+		account[month] += this.fund[month]*0.009
+	    }
+	    
+	    // end of deposit. Interests
+	    if (month == 13) {
+		console.warn("Interest:" + deposit*0.025)
+		account[month] += deposit * 0.025
+	    }
+	    
+	}// for
+	
+    }// constructor
+
+}// class CouponStrategy
+
+
+/**
+ * Returns an array with the interest updated according
+ * to the euribor changes
+ * @param {int} differential - constant 
+ * @param {string} frequency - Update frequency (monthly, quarterly, yearly)
+ * @param {string} type - Type of interest evolution (constant, exponential) 
+ */
+function setMonthlyInterest() {
+    return []
+}
 
 /**
  * Returns the number of pending payments
@@ -65,7 +111,13 @@ function calculate(mortgage, interest, term, partial_amortizations) {
     let sumInterest = 0
     let sumSavings = 0
     let sumSavingsCPI = 0
+    let sumPayments = 0
+    let initialSavings = 0000
+    let annualCPI = 0.02
 
+    sumSavings = initialSavings
+    sumSavingsCPI = initialSavings
+    
     while (N>0) {
 	let extra=0
 	let a_n_new = amortized(payment, interest, currentMonth-1, currentMonth-1+N)
@@ -78,15 +130,21 @@ function calculate(mortgage, interest, term, partial_amortizations) {
 		capital -= partial_amortizations[amort].amount
 		N = updateNumberOfPayments(capital, payment, interest)
 		extra += partial_amortizations[amort].amount
+
+		// discount this amount from the savings
+		sumSavingsCPI -= partial_amortizations[amort].amount
+		sumSavings -= partial_amortizations[amort].amount
 	    }
 	}
 
 	sumInterest+=payment - a_n;
 
 	// savings
-	sumSavingsCPI -= sumSavingsCPI*0.02/12
+	sumSavingsCPI -= sumSavingsCPI*annualCPI/12
 	sumSavingsCPI += savings
 	sumSavings += savings
+
+	sumPayments += payment + extra
 
 	monthlyPayments.push({
 	    month: currentMonth,
@@ -97,11 +155,13 @@ function calculate(mortgage, interest, term, partial_amortizations) {
 	    sumInterest: sumInterest,
 	    sumSavings: sumSavings,
 	    sumSavingsCPI: parseInt(sumSavingsCPI),
+	    sumPayments: sumPayments,
 	    extra: extra
 	})
 
 	N -= 1
 	currentMonth +=1
+
     } // while
 
     return {payment:payment, months:monthlyPayments}
@@ -115,8 +175,9 @@ app.get('/', function (req, res) {
     let _term
     let _amortization
     let _partial
-    let _sumacuotas = 0
-
+    let _duration = 30
+    let _account = Array(_duration).fill(0)
+    
     _mortgage = req.query['mortgage']
     _interest = req.query['interest']
     _term = req.query['term']
@@ -144,22 +205,17 @@ app.get('/', function (req, res) {
 	console.warn(_partial)
     }
 
-    // let partial = {type: "periodic", period: 3, amount: 1000}
-    // let partial2 = {type: "extra", month: 10, amount: 1000}
-    // let partial3 = {}
-
     _monthlyInterest = _interest/12
+
+    var couponStrategyFund = new CouponStrategy(10000, 0, 0, _duration, _account)
+    
 
     let _payments = calculate(_mortgage, _monthlyInterest, _term, _partial)
 
-    let total = _payments.months.reduce(function(prev, current, index, vector) {
-	return {payment: prev.payment + current.payment + current.extra}
-    });
-
     console.log ("Cuota: " + _payments.payment)
     console.log ("Hipoteca: " + _mortgage)
-    console.log ("Pagado al banco: " + total.payment)
-    console.log ("Intereses: " + (total.payment - _mortgage))
+    console.log ("Pagado al banco: " + _payments.totalPayment)
+    console.log ("Intereses: " + ( _payments.totalPayment - _mortgage))
 
     res.send(_payments);
 });
@@ -168,8 +224,17 @@ var server = app.listen(8000, function () {
   var host = server.address().address;
   var port = server.address().port;
 
-  console.log('Example app listening at http://%s:%s', host, port);
+  console.log('Mortgage simulator listening at http://%s:%s', host, port);
 });
 
-// TODO: 
+// TODO:
 //    * modelar liquidar de golpe (cuando el capital pendiente sea igual a una cantidad dada)
+//    * euribor variable
+//    * inversion de ahorro
+//    * ligar ahorro con amortizaciones parciales??
+//    * parametrizar ahorro mensual
+//    * calcular porcentaje de intereses pagados y pendientes de pagar
+//    * corregir valores de primer y último mes
+//    * [frontend] varias simulaciones. Mostrar solo una tabla al mismo tiempo.
+//                 Tarjetas para elegir qué datos se agregan a gráficas
+//    * encapsular los ingresos en cuenta como objetos para saber de donde vienen
