@@ -7,37 +7,56 @@ var savings = 500
 app.use(json())
 app.use(express.static('public'))
 
+class Account {
+    constructor(initial, salary, duration) {
+	this.amount = []
+    }
+
+    step() {
+	this.amount.push(this.amount.slice(-1))
+    }
+    
+    deposit(amount) {
+	this.amount[this.amount.length-1] += amount
+    }
+
+    extract(amount) {
+	this.amount[this.amount.length-1] -= amount
+    }
+}
+
+
 class CouponStrategy {
-    constructor(deposit, fund, initialmonth, duration, account) {
-	this.deposit = Array(duration).fill(deposit)
-	this.fund = Array(duration).fill(fund)
+    constructor(deposit, fund, initialmonth, account) {
+	this.deposit = []
+	this.fund = []
 	this.output = deposit/12
 	this.input = deposit/12 - (deposit/12)*0.05
 	this.deposit[0] = deposit
 	this.fund[0] = fund
+	this.month=0
+	this.account= account
+    }
 
-	for (var month=1; month<duration; month++) {
-	    if (month<13) {
-		this.deposit[month] = this.deposit[month-1] -this.output
-	    }
+    step() {
+	this.month +=1
+	this.fund.push(this.fund[this.month-1])
 
-	    this.fund[month] = this.fund[month-1] + this.input
-	    
-	    // dividend
-	    if (month%3 == 0) {
-		console.warn("Dividend: " + this.fund[month]*0.009)
-		account[month] += this.fund[month]*0.009
-	    }
-	    
-	    // end of deposit. Interests
-	    if (month == 13) {
-		console.warn("Interest:" + deposit*0.025)
-		account[month] += deposit * 0.025
-	    }
-	    
-	}// for
-	
-    }// constructor
+	if (this.month<13) {
+	    this.deposit[this.month] = this.deposit[this.month-1] - this.output
+	    this.fund[this.month] += this.input
+	}
+
+	// dividend
+	if (this.month%3 == 0) {
+	    this.account.deposit(this.fund[this.month]*0.009)
+	}
+
+	// end of deposit. Interests
+	if (this.month == 13) {
+	    this.account.deposit(this.deposit[0] * 0.025)
+	}
+    }
 
 }// class CouponStrategy
 
@@ -87,7 +106,7 @@ function amortized(payment, interest, paidmonths, numberofpayments) {
 function performPartialAmortization(partial_amortization, currentMonth) {
     if (currentMonth == 0) {
 	return false
-    } 
+    }
     return ((partial_amortization.type == "periodic") &&
 	    ((currentMonth % partial_amortization.period) == 0)) ||
 	((partial_amortization.type == "extra") &&
@@ -112,18 +131,24 @@ function calculate(mortgage, interest, term, partial_amortizations) {
     let sumSavings = 0
     let sumSavingsCPI = 0
     let sumPayments = 0
-    let initialSavings = 0000
+    let initialSavings = 40000
     let annualCPI = 0.02
 
     sumSavings = initialSavings
     sumSavingsCPI = initialSavings
-    
+
+    var account = new Account()
+    var couponStrategyFund = new CouponStrategy(30000, 0, 0, account)
+
     while (N>0) {
 	let extra=0
 	let a_n_new = amortized(payment, interest, currentMonth-1, currentMonth-1+N)
 	// TODO: should a_n be calculated before performing amortizations
 	let a_n = capital - a_n_new
 	capital = a_n_new
+	
+	account.step()
+	couponStrategyFund.step()
 
 	for (var amort in partial_amortizations) {
 	    if (performPartialAmortization(partial_amortizations[amort], currentMonth)) {
@@ -175,8 +200,7 @@ app.get('/', function (req, res) {
     let _term
     let _amortization
     let _partial
-    let _duration = 30
-    let _account = Array(_duration).fill(0)
+    let _duration = 240
     
     _mortgage = req.query['mortgage']
     _interest = req.query['interest']
@@ -206,9 +230,6 @@ app.get('/', function (req, res) {
     }
 
     _monthlyInterest = _interest/12
-
-    var couponStrategyFund = new CouponStrategy(10000, 0, 0, _duration, _account)
-    
 
     let _payments = calculate(_mortgage, _monthlyInterest, _term, _partial)
 
