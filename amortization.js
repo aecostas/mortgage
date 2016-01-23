@@ -1,195 +1,39 @@
 "use strict";
+const Account = require('./account.js')
+const Mortgage = require('./mortgage.js')
+const CouponStrategy = require('./couponstrategy.js')
+
 var express = require('express');
 var app = express();
 var json = require('express-json');
-var savings = 500
 
 app.use(json())
 app.use(express.static('public'))
 
-class Account {
-    constructor(initial, salary, duration) {
-	this.amount = []
-    }
-
-    step() {
-	this.amount.push(this.amount.slice(-1))
-    }
-    
-    deposit(amount) {
-	this.amount[this.amount.length-1] += amount
-    }
-
-    extract(amount) {
-	this.amount[this.amount.length-1] -= amount
-    }
-}
-
-
-class CouponStrategy {
-    constructor(deposit, fund, initialmonth, account) {
-	this.deposit = []
-	this.fund = []
-	this.output = deposit/12
-	this.input = deposit/12 - (deposit/12)*0.05
-	this.deposit[0] = deposit
-	this.fund[0] = fund
-	this.month=0
-	this.account= account
-    }
-
-    step() {
-	this.month +=1
-	this.fund.push(this.fund[this.month-1])
-
-	if (this.month<13) {
-	    this.deposit[this.month] = this.deposit[this.month-1] - this.output
-	    this.fund[this.month] += this.input
-	}
-
-	// dividend
-	if (this.month%3 == 0) {
-	    this.account.deposit(this.fund[this.month]*0.009)
-	}
-
-	// end of deposit. Interests
-	if (this.month == 13) {
-	    this.account.deposit(this.deposit[0] * 0.025)
-	}
-    }
-
-}// class CouponStrategy
-
-
-/**
- * Returns an array with the interest updated according
- * to the euribor changes
- * @param {int} differential - constant 
- * @param {string} frequency - Update frequency (monthly, quarterly, yearly)
- * @param {string} type - Type of interest evolution (constant, exponential) 
- */
-function setMonthlyInterest() {
-    return []
-}
-
-/**
- * Returns the number of pending payments
- * @param {int} pending - Pending capital
- * @param {float} payment - The amount to pay periodically 
- * @param {float} interest - Monthly interest (example: 1.2/12)
- */
-function updateNumberOfPayments(pending, payment, interest) {
-    let N=-1* Math.log( 1 - pending*interest/(payment*100)) / (Math.log(1 + interest/100))
-    return N
-}
-
-/**
- * Calculates the amortized capital 
- * @param {float} payment - The amount to pay periodically 
- * @param {float} interest - Monthly interest (example: 1.2/12)
- * @param {paidmonths} paidmonths - Number of monthly payments
- * @param {int} numberofpayments - Number of total payments (update 
- *              with any partial amortization)
- * @return {float} Amortized capital
- */
-function amortized(payment, interest, paidmonths, numberofpayments) {
-    let value = payment * (1 - Math.pow(1+interest/100.0, paidmonths-numberofpayments )) / (interest/100.0)
-    return value
-}
-
-/**
- * Checks if the a partial amortization has to be 
- * done in the current month, according to the given rules
- * @param {int} currentMonth - 
- * @param {object} partial_amortization - 
- */
-function performPartialAmortization(partial_amortization, currentMonth) {
-    if (currentMonth == 0) {
-	return false
-    }
-    return ((partial_amortization.type == "periodic") &&
-	    ((currentMonth % partial_amortization.period) == 0)) ||
-	((partial_amortization.type == "extra") &&
-	 (currentMonth == partial_amortization.month))
-}
-
 
 /**
  * Calculates how a mortgage evolves with the time
- * @param {int} mortgage - Initial 
+ * @param {int} mortgage - Initial
  * @param {float} interest - Monthly interest
  * @param {int} term - Mortgage term (i.e.: number of total months)
  * @param {object} partial_amortization - 
  */
 function calculate(mortgage, interest, term, partial_amortizations) {
-    let N = term
-    let currentMonth=1
-    let capital = mortgage
-    let payment = capital*interest/(100*(1 - Math.pow((1+interest/100), -term) ))
-    let monthlyPayments = []
-    let sumInterest = 0
-    let sumSavings = 0
-    let sumSavingsCPI = 0
-    let sumPayments = 0
-    let initialSavings = 40000
-    let annualCPI = 0.02
 
-    sumSavings = initialSavings
-    sumSavingsCPI = initialSavings
-
-    var account = new Account()
-    var couponStrategyFund = new CouponStrategy(30000, 0, 0, account)
-
-    while (N>0) {
-	let extra=0
-	let a_n_new = amortized(payment, interest, currentMonth-1, currentMonth-1+N)
-	// TODO: should a_n be calculated before performing amortizations
-	let a_n = capital - a_n_new
-	capital = a_n_new
-	
+    var account = new Account(10000)
+    var couponStrategyFund = new CouponStrategy(30000, 0, 0, account, 0.20, 0.01)
+    var mortgage = new Mortgage(mortgage, interest, term, partial_amortizations, account)
+    
+    for (let month=0; month<30*12; month++) {
 	account.step()
 	couponStrategyFund.step()
+	mortgage.step()
 
-	for (var amort in partial_amortizations) {
-	    if (performPartialAmortization(partial_amortizations[amort], currentMonth)) {
-		capital -= partial_amortizations[amort].amount
-		N = updateNumberOfPayments(capital, payment, interest)
-		extra += partial_amortizations[amort].amount
+    }// for
 
-		// discount this amount from the savings
-		sumSavingsCPI -= partial_amortizations[amort].amount
-		sumSavings -= partial_amortizations[amort].amount
-	    }
-	}
+    console.warn(mortgage.values())
 
-	sumInterest+=payment - a_n;
-
-	// savings
-	sumSavingsCPI -= sumSavingsCPI*annualCPI/12
-	sumSavingsCPI += savings
-	sumSavings += savings
-
-	sumPayments += payment + extra
-
-	monthlyPayments.push({
-	    month: currentMonth,
-	    capital: capital,
-	    payment: payment,
-	    amortization: a_n,
-	    interest:payment - a_n,
-	    sumInterest: sumInterest,
-	    sumSavings: sumSavings,
-	    sumSavingsCPI: parseInt(sumSavingsCPI),
-	    sumPayments: sumPayments,
-	    extra: extra
-	})
-
-	N -= 1
-	currentMonth +=1
-
-    } // while
-
-    return {payment:payment, months:monthlyPayments}
+    return {}
 
 }// calculate
 
@@ -259,3 +103,4 @@ var server = app.listen(8000, function () {
 //    * [frontend] varias simulaciones. Mostrar solo una tabla al mismo tiempo.
 //                 Tarjetas para elegir qué datos se agregan a gráficas
 //    * encapsular los ingresos en cuenta como objetos para saber de donde vienen
+//    * mover ahorros teniendo en cuenta IPC a cuenta
