@@ -31,19 +31,33 @@ function calculate(mortgage, interest, term, partial_amortizations) {
 
     }// for
 
-    console.warn(mortgage.values())
+    //    console.warn(mortgage.values())
 
-    return {}
+    return {
+	account:account.values(),
+	    couponstrategy:couponStrategyFund.values()
+	    }
 
 }// calculate
 
+
+app.get('/dummy', function(req, res) {
+	let _payments = calculate(100000, 1.2/12, 360, {})
+	    console.log ("Cuota: " + _payments.payment)
+	    console.log ("Hipoteca: 100000")
+	    console.log ("Pagado al banco: " + _payments.totalPayment)
+	    console.log ("Intereses: " + ( _payments.totalPayment - 100000))
+	 
+	    res.send(_payments);
+    });
+
 app.get('/', function (req, res) {
-    let _mortgage
-    let _interest
-    let _monthlyInterest
-    let _term
-    let _amortization
-    let _partial
+	let _mortgage;
+	let _interest;
+	let _monthlyInterest
+	    let _term
+	    let _amortization
+	    let _partial
     let _duration = 240
     
     _mortgage = req.query['mortgage']

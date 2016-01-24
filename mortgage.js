@@ -3,17 +3,20 @@
 class Mortgage {
 
     constructor(mortgage, interest, term, partial_amortizations, account) {
-	this.N = term
-	this.currentMonth=1
-	this.interest = interest
-	this.capital = mortgage
-	this.payment = this.capital*interest/(100*(1 - Math.pow((1+interest/100), -term) ))
+	this.N = term;
+	this.currentMonth=1;
+	this.interest = interest;
+	this.capital = mortgage;
+	this.payment = this.capital*interest/(100*(1 - Math.pow((1+interest/100), -term) ));
+	console.warn("Calculated payment: " + this.payment);
+	console.warn("Term: "+ term);
 	this.monthlyPayments = []
 	this.sumInterest = 0
 	this.sumPayments = 0
 	this.annualCPI = 0.02
 	this.account = account
-	this.status = "OPEN"
+	    this.status = "OPEN";
+	this.name = "Mortgage";
     }// constructor
 
 
@@ -86,7 +89,7 @@ class Mortgage {
 		extra += this.partial_amortizations[amort].amount
 
 		// discount this amount from the savings
-		this.account.extract(this.partial_amortizations[amort].amount)
+		this.account.extract(this.name, "Partial amortization", this.partial_amortizations[amort].amount)
 	    }
 	}
 
@@ -102,10 +105,10 @@ class Mortgage {
 	    interest: this.payment - a_n,
 	    sumInterest: this.sumInterest,
 	    sumPayments: this.sumPayments,
-	    extra: extra
-	})
-
-	this.account.extract(this.payment)
+		    extra: extra
+		    });
+	
+	this.account.extract(this.name, "Monthly mortgage payment", this.payment)
 
 	this.N -= 1
 

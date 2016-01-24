@@ -12,6 +12,7 @@ class CouponStrategy {
 	this.account= account
 	this.taxes = taxes
 	this.div = dividend
+	    this.name = "CouponStrategy"
     }
 
     step() {
@@ -25,12 +26,12 @@ class CouponStrategy {
 
 	// dividend
 	if (this.month%3 == 0) {
-	    this.account.deposit(this.fund[this.month]*this.div*(1-this.taxes))
+	    this.account.deposit(this.name, "Coupon strategy fund dividend", this.fund[this.month]*this.div*(1-this.taxes))
 	}
 
 	// end of deposit. Interests
 	if (this.month == 13) {
-	    this.account.deposit(this.deposit[0] * 0.025)
+	    this.account.deposit(this.name, "Coupon strategy deposit interests", this.deposit[0] * 0.025)
 	}
     }
 
