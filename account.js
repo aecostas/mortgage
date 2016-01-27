@@ -1,7 +1,8 @@
 "use strict";
 
 class Account {
-    constructor(initial) {
+    constructor(name, initial) {
+	this.name = name;
 	this.month=0;
 	this.amount = [];	    
 	this.amount[0] = initial;
