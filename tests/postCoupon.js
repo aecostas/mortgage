@@ -11,7 +11,7 @@ request.post(
 		     deposit: 10000,
 		     fund: 0,
 		     initialMonth: 0,
-		     taxes: taxes,
+			 taxes: '{"vat":0.20, "suscription":0.05}',
 		     dividend: 0.01,
 		     interest: 0.025
 		 }

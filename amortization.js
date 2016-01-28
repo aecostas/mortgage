@@ -85,18 +85,18 @@ app.post('/coupon', function(req, res) {
 	// first of all, an Account should
 	// have beend created
 	if (loadedModules.length==0) {
-	    res.status(405).end("texto!");
+	    res.status(405).end();
 	    return;
 	}
-
+	
 	let deposit = req.body.deposit;
 	let fund = req.body.fund;
 	let initialMonth = req.body.initialMonth;
-	let taxes = req.body.taxes;
+	let taxes = JSON.parse(req.body.taxes);
 	let dividend = req.body.dividend;
 	let interest = req.body.interest;
 
-	loadedModules.push(new CouponStrategy(deposit, fund, initialMonth, taxes, dividend, interest))
+	loadedModules.push(new CouponStrategy(deposit, fund, initialMonth, loadedModules[0], taxes, dividend, interest))
 
 	res.send()
     });
@@ -105,15 +105,21 @@ app.post('/simulation', function(req, res){
 	console.warn("simulation!");
 });
 
+
 app.get('/simulation', function(req, res) {
-	let duration = req.body.duration;
+	let duration = req.query.duration;
 
 	for (let month=0; month<duration; month++) {
+	    //	    console.warn("Month: "+month);
 	    loadedModules.forEach(function(module) {
 		    module.step();
 		});
 	}// for
 
+	loadedModules.forEach(function(module) {
+		console.warn(module.values());
+	    });
+	
 	res.send();
 })
 
