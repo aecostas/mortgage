@@ -1,5 +1,6 @@
 node_modules
 dist
+out
 .tmp
 .sass-cache
 .DS_Store
