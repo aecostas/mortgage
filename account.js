@@ -1,5 +1,7 @@
 "use strict";
 
+const AccountMovement = require('./accountmovement.js')
+
 class Account {
 
     /**
@@ -34,7 +36,7 @@ class Account {
      */
     deposit(source, concept, amount) {
 	this.amount[this.amount.length-1] += amount;
-	this.movements.push({source:source, concept:concept, amount:amount, month:this.month});
+	this.movements.push(new AccountMovement(source, concept, amount,this.month));
     }
 
     /**
@@ -45,7 +47,7 @@ class Account {
      */
     extract(target, concept, amount) {
 	this.amount[this.amount.length-1] -= amount;
-	this.movements.push({source:target, concept:concept, amount:-amount, month:this.month});
+	this.movements.push(new AccountMovement(target, concept, -amount, this.month));
     }
 
     /**
@@ -56,6 +58,15 @@ class Account {
     values() {
 	return this.amount
     }
+
+    /**
+     * Gets the movements on this account, bot extractions and deposits, 
+     * @return {Array<AccountMovement>} Object including source, concept, amount and relative month on the simulation
+     */
+    movements() {
+	return this.movements
+    }
+
 }
 
 module.exports = Account
