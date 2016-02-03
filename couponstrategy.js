@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Simulates a fund with fed from a deposit.
+ * Simulates a fund fed from a deposit.
  * The fund shares dividends
  * 
  */
