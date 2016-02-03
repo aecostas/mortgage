@@ -28,7 +28,7 @@ function calculate(mortgage, interest, term, partial_amortizations) {
     var taxes = {};
     taxes.vat = 0.20;
     taxes.suscription = 0.05;
-    var couponStrategyFund = new CouponStrategy(30000, 0, 0, account, taxes, 0.01, 0.025);
+    var couponStrategyFund = new CouponStrategy(30000, 12, 0, 0, account, taxes, 0.01, 0.025);
     var mortgage = new Mortgage(mortgage, interest, term, partial_amortizations, account);
 
     for (let month=0; month<30*12; month++) {
@@ -96,7 +96,7 @@ app.post('/coupon', function(req, res) {
 	let dividend = req.body.dividend;
 	let interest = req.body.interest;
 
-	loadedModules.push(new CouponStrategy(deposit, fund, initialMonth, loadedModules[0], taxes, dividend, interest))
+	loadedModules.push(new CouponStrategy(deposit, 12,fund, initialMonth, loadedModules[0], taxes, dividend, interest))
 
 	res.send()
     });
