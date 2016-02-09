@@ -15,7 +15,7 @@ class Account {
 	this.month=0;
 	this.amount = [];	    
 	this.amount[0] = initial;
-	this.movements = [];
+	this._movements = [];
     }// constructor
 
     /**
@@ -25,7 +25,7 @@ class Account {
     step() {
 	this.amount.push(this.amount[this.amount.length-1]);
 	this.month +=1;
-    }
+    };
     
 
     /**
@@ -36,8 +36,8 @@ class Account {
      */
     deposit(source, concept, amount) {
 	this.amount[this.amount.length-1] += amount;
-	this.movements.push(new AccountMovement(source, concept, amount,this.month));
-    }
+	this._movements.push(new AccountMovement(source, concept, amount,this.month));
+    };
 
     /**
      * Gets an amount of money from the account
@@ -47,8 +47,8 @@ class Account {
      */
     extract(target, concept, amount) {
 	this.amount[this.amount.length-1] -= amount;
-	this.movements.push(new AccountMovement(target, concept, -amount, this.month));
-    }
+	this._movements.push(new AccountMovement(target, concept, -amount, this.month));
+    };
 
     /**
      * Gets the values of the account from the beginning of the
@@ -57,15 +57,15 @@ class Account {
      */
     values() {
 	return this.amount
-    }
+    };
 
     /**
      * Gets the movements on this account, bot extractions and deposits, 
      * @return {Array<AccountMovement>} Object including source, concept, amount and relative month on the simulation
      */
-    movements() {
-	return this.movements
-    }
+    get movements() {
+	return this._movements
+    };
 
 }
 

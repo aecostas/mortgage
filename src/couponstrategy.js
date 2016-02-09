@@ -3,7 +3,6 @@
 /**
  * Simulates a fund fed from a deposit.
  * The fund shares dividends
- * 
  */
 class CouponStrategy {
 
@@ -84,5 +83,5 @@ class CouponStrategy {
 
 module.exports = CouponStrategy
 
-    // TODO: simulate variation of participation price
-    //       indicate the periodicity of dividends
+// TODO: simulate variation of participation price
+//       indicate the periodicity of dividends
