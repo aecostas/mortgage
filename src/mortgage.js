@@ -2,21 +2,26 @@
 
 class Mortgage {
 
+    /**
+     *
+     *
+     *
+     *
+     */
     constructor(mortgage, interest, term, partial_amortizations, account) {
 	this.N = term;
 	this.currentMonth=1;
 	this.interest = interest;
 	this.capital = mortgage;
-	this.payment = this.capital*interest/(100*(1 - Math.pow((1+interest/100), -term) ));
-	console.warn("Calculated payment: " + this.payment);
-	console.warn("Term: "+ term);
+	this._payment = this.capital*interest/(100*(1 - Math.pow((1+interest/100), -term) ));
 	this.monthlyPayments = []
 	this.sumInterest = 0
 	this.sumPayments = 0
 	this.annualCPI = 0.02
 	this.account = account
-	    this.status = "OPEN";
+	this._status = "OPEN";
 	this.name = "Mortgage";
+	this.partial_amortizations = partial_amortizations;
     }// constructor
 
 
@@ -40,7 +45,7 @@ class Mortgage {
      */
     updateNumberOfPayments(pending, payment, interest) {
 	let N=-1* Math.log( 1 - pending*interest/(payment*100)) / (Math.log(1 + interest/100))
-	return N
+	return Math.ceil(N)
     }
     
     /**
@@ -74,18 +79,19 @@ class Mortgage {
     }
 
     step() {
-	if (this.status=="FINISHED") return;
+	if (this._status=="FINISHED") return;
 
 	let extra=0
-	let a_n_new = this.amortized(this.payment, this.interest, this.currentMonth-1, this.currentMonth-1 + this.N)
+	let a_n_new = this.amortized(this._payment, this.interest, this.currentMonth, this.currentMonth + this.N)
 	// TODO: should a_n be calculated before performing amortizations
 	let a_n = this.capital - a_n_new
 	this.capital = a_n_new
 
 	for (var amort in this.partial_amortizations) {
-	    if (performPartialAmortization(this.partial_amortizations[amort], this.currentMonth)) {
+	    if (this.performPartialAmortization(this.partial_amortizations[amort], this.currentMonth)) {
 		this.capital -= this.partial_amortizations[amort].amount
-		this.N = updateNumberOfPayments(this.capital, this.payment, this.interest)
+		let tempN = this.updateNumberOfPayments(this.capital, this._payment, this.interest);
+		this.N = tempN
 		extra += this.partial_amortizations[amort].amount
 
 		// discount this amount from the savings
@@ -93,27 +99,26 @@ class Mortgage {
 	    }
 	}
 
-	this.sumInterest+=this.payment - a_n;
+	this.sumInterest+=this._payment - a_n;
 
-	this.sumPayments += this.payment + extra
+	this.sumPayments += this._payment + extra
 
 	this.monthlyPayments.push({
 	    month: this.currentMonth,
 	    capital: this.capital,
-	    payment: this.payment,
+	    payment: this._payment,
 	    amortization: a_n,
-	    interest: this.payment - a_n,
+	    interest: this._payment - a_n,
 	    sumInterest: this.sumInterest,
 	    sumPayments: this.sumPayments,
-		    extra: extra
-		    });
+	    extra: extra
+	});
 	
-	this.account.extract(this.name, "Monthly mortgage payment", this.payment)
+	this.account.extract(this.name, "Monthly mortgage payment", this._payment)
 
 	this.N -= 1
-
 	if (this.N == 0) {
-	    this.status = "FINISHED"
+	    this._status = "FINISHED"
 	}
 
 	this.currentMonth +=1
@@ -122,6 +127,26 @@ class Mortgage {
     values() {
 	return this.monthlyPayments	
     }
+
+
+    /**
+     * Returns the status of the mortgage: OPEN if there is
+     * any pending capital; FINISHED otherwise
+     */
+    get status() {
+	return this._status
+    }
+
+    /**
+     * Returns the calculated monthly payment
+     * for this mortgage
+     *
+     */
+    get payment() {
+    }
+    
 }// class Mortgage
 
 module.exports = Mortgage
+
+// TODO: risk analysis of the mortgage
