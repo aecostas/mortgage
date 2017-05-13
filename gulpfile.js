@@ -3,7 +3,7 @@
 var eslint = require('gulp-eslint');
 var util = require('gulp-util');
 
-var JS_FILES = '*.js';
+var JS_FILES = './src/*.js';
 
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');

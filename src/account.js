@@ -11,22 +11,29 @@ class Account {
      *                      moment of starting the simulation
      */
     constructor(name, initial) {
-	this.name = name;
-	this.month=0;
-	this.amount = [];	    
+	this._name = name;
+	this.month = 0;
+	this.amount = [];
 	this.amount[0] = initial;
 	this._movements = [];
     }// constructor
 
+    get name() {
+	return this._name;
+    }
+
+    get value() {
+	return this.amount[amount.lenth - 1];
+    }
+    
     /**
      * Simulates a new month. A new month in the account
      * means a copy of the previous amount.
      */
     step() {
 	this.amount.push(this.amount[this.amount.length-1]);
-	this.month +=1;
+	this.month += 1;
     };
-    
 
     /**
      * Insert an amount of money in the account
@@ -66,7 +73,6 @@ class Account {
     get movements() {
 	return this._movements
     };
-
 }
 
 module.exports = Account

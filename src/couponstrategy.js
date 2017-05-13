@@ -32,9 +32,13 @@ class CouponStrategy {
 	this.account= account;
 	this.vat = taxes.vat;
 	this.div = dividend;
-	this.name = "CouponStrategy";
+	this._name = "CouponStrategy";
 	this.monthPayInterest = duration + 1
     }// constructor
+
+    get name() {
+	return this._name;
+    }
 
     //    getFundIncrement()
 
@@ -55,12 +59,12 @@ class CouponStrategy {
 
 	// dividend
 	if (this.month%3 == 0) {
-	    this.account.deposit(this.name, "Coupon strategy fund dividend", this.fund[this.month]*this.div*(1-this.vat))
+	    this.account.deposit(this._name, "Coupon strategy fund dividend", this.fund[this.month]*this.div*(1-this.vat))
 	}
 
 	// end of deposit. Interest
 	if (this.month == this.monthPayInterest) {
-	    this.account.deposit(this.name, "Coupon strategy deposit interests", this.deposit[0] * this.interest)
+	    this.account.deposit(this._name, "Coupon strategy deposit interests", this.deposit[0] * this.interest)
 	}
     }// step
 

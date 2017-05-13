@@ -1,0 +1,13 @@
+node_modules
+dist
+out
+coverage
+.tmp
+.sass-cache
+.DS_Store
+.uids.js
+bower_components
+app/styles/*.map
+app/styles/*.css
+app/Sippo.js
+~*

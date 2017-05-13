@@ -3,6 +3,7 @@
 const Account = require('./account.js');
 const Mortgage = require('./mortgage.js');
 const CouponStrategy = require('./couponstrategy.js');
+const Job = require('./job.js');
 
 var express = require('express');
 var app = express();
@@ -10,7 +11,6 @@ var json = require('express-json');
 var bodyParser = require('body-parser')
 
 var loadedModules = []
-
 
 app.use(json());
 app.use(express.static('public'));
@@ -42,23 +42,26 @@ function calculate(mortgage, interest, term, partial_amortizations) {
     return {
 	account:account.values(),
 	    couponstrategy:couponStrategyFund.values()
-	    }
+    }
 
 }// calculate
 
+app.get('/dummy2', function(req, res) {
+
+});
 
 app.get('/dummy', function(req, res) {
-	let _payments = calculate(100000, 1.2/12, 360, {});
-	console.log ("Cuota: " + _payments.payment);
-	console.log ("Hipoteca: 100000");
-	console.log ("Pagado al banco: " + _payments.totalPayment);
-	console.log ("Intereses: " + ( _payments.totalPayment - 100000));
-	res.send(_payments);
-    });
+    let _payments = calculate(100000, 1.2/12, 360, {});
+    console.log ("Cuota: " + _payments.payment);
+    console.log ("Hipoteca: 100000");
+    console.log ("Pagado al banco: " + _payments.totalPayment);
+    console.log ("Intereses: " + ( _payments.totalPayment - 100000));
+    res.send(_payments);
+});
 
 app.post('/account', function(req, res) {
 	let name = req.body.name;
-	let initial = req.body.initial;
+	let initial = parseInt(req.body.initial);
 
 	loadedModules.push(new Account(name, initial));
 	res.send()
@@ -68,7 +71,7 @@ app.post('/mortgage', function(req, res) {
 	// first of all, an Account should
 	// have beend created
 	if (loadedModules.length==0) {
-	    res.status(405).end("texto!");
+	    res.status(405).end();
 	    return;
 	}
 
@@ -81,14 +84,29 @@ app.post('/mortgage', function(req, res) {
 	res.send({})
     });
 
+app.post('/job', function(req, res) {
+    // first of all, an Account should
+    // have beend created
+    if (loadedModules.length == 0) {
+	res.status(405).end();
+	return;
+    }
+
+    let salary = parseInt(req.body.salary);
+    let name = req.body.name;
+
+    loadedModules.push(new Job(name, loadedModules[0], salary));
+    res.send();
+});
+
 app.post('/coupon', function(req, res) {
 	// first of all, an Account should
 	// have beend created
-	if (loadedModules.length==0) {
+	if (loadedModules.length == 0) {
 	    res.status(405).end();
 	    return;
 	}
-	
+
 	let deposit = req.body.deposit;
 	let fund = req.body.fund;
 	let initialMonth = req.body.initialMonth;
@@ -107,20 +125,21 @@ app.post('/simulation', function(req, res){
 
 
 app.get('/simulation', function(req, res) {
-	let duration = req.query.duration;
-
-	for (let month=0; month<duration; month++) {
-	    //	    console.warn("Month: "+month);
-	    loadedModules.forEach(function(module) {
-		    module.step();
-		});
-	}// for
-
+   let duration = req.query.duration;
+    
+    for (let month=0; month<duration; month++) {
 	loadedModules.forEach(function(module) {
-		console.warn(module.values());
-	    });
+	    module.step();
+	});
+    }// for
+    
+    loadedModules.forEach(function(module) {
+	if (module instanceof Account) {
+	    console.warn(module.name, module.values());
+	}
+    });
 	
-	res.send();
+    res.send();
 })
 
 app.get('/', function (req, res) {

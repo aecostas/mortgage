@@ -2,12 +2,6 @@
 
 class Mortgage {
 
-    /**
-     *
-     *
-     *
-     *
-     */
     constructor(mortgage, interest, term, partial_amortizations, account) {
 	this.N = term;
 	this.currentMonth=1;
@@ -20,10 +14,13 @@ class Mortgage {
 	this.annualCPI = 0.02
 	this.account = account
 	this._status = "OPEN";
-	this.name = "Mortgage";
+	this._name = "Mortgage";
 	this.partial_amortizations = partial_amortizations;
     }// constructor
 
+    get name() {
+	return this._name;
+    }
 
     /**
      * Returns an array with the interest updated according
@@ -35,7 +32,6 @@ class Mortgage {
     setMonthlyInterest() {
 	return []
     }
-
 
     /**
      * Returns the number of pending payments
@@ -95,7 +91,7 @@ class Mortgage {
 		extra += this.partial_amortizations[amort].amount
 
 		// discount this amount from the savings
-		this.account.extract(this.name, "Partial amortization", this.partial_amortizations[amort].amount)
+		this.account.extract(this._name, "Partial amortization", this.partial_amortizations[amort].amount)
 	    }
 	}
 
@@ -114,7 +110,7 @@ class Mortgage {
 	    extra: extra
 	});
 	
-	this.account.extract(this.name, "Monthly mortgage payment", this._payment)
+	this.account.extract(this._name, "Monthly mortgage payment", this._payment)
 
 	this.N -= 1
 	if (this.N == 0) {
@@ -140,7 +136,6 @@ class Mortgage {
     /**
      * Returns the calculated monthly payment
      * for this mortgage
-     *
      */
     get payment() {
     }
