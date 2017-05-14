@@ -4,6 +4,7 @@ const Account = require('./account.js');
 const Mortgage = require('./mortgage.js');
 const CouponStrategy = require('./couponstrategy.js');
 const Job = require('./job.js');
+const Car = require('./car.js');
 
 var express = require('express');
 var app = express();
@@ -99,6 +100,26 @@ app.post('/job', function(req, res) {
     res.send();
 });
 
+app.post('/car', function(req, res) {
+    // first of all, an Account should
+    // have beend created
+    if (loadedModules.length == 0) {
+	res.status(405).end();
+	return;
+    }
+
+    let fuel = parseInt(req.body.fuel);
+    let price = parseInt(req.body.price);
+    let expenses = parseInt(req.body.expenses);
+    let taxes = parseInt(req.body.taxes);
+    let insurance = parseInt(req.body.insurance);
+    let name = req.body.name;
+
+    loadedModules.push(new Car(name, loadedModules[0], price, taxes, expenses, fuel, insurance));
+
+    res.send();
+});
+
 app.post('/coupon', function(req, res) {
 	// first of all, an Account should
 	// have beend created
@@ -132,13 +153,22 @@ app.get('/simulation', function(req, res) {
 	    module.step();
 	});
     }// for
-    
+
     loadedModules.forEach(function(module) {
 	if (module instanceof Account) {
-	    console.warn(module.name, module.values());
+	    let values = module.values();
+	    let prev = parseInt(values[0]);
+	    for (let i = 0; i < 12*3; i++) {
+		let current = parseInt(values[i]);
+		let diff = current - prev;
+		console.warn(i + ' ' + current + ' ' + diff );
+		prev = current;
+	    }
 	}
     });
-	
+
+//    console.warn(loadedModules[0].movements);
+    
     res.send();
 })
 
