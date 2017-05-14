@@ -5,6 +5,8 @@ const Mortgage = require('./mortgage.js');
 const CouponStrategy = require('./couponstrategy.js');
 const Job = require('./job.js');
 const Car = require('./car.js');
+const House = require('./house.js');
+
 
 var express = require('express');
 var app = express();
@@ -119,6 +121,59 @@ app.post('/car', function(req, res) {
 
     res.send();
 });
+
+app.post('/house', function(req, res) {
+    // first of all, an Account should
+    // have beend created
+    if (loadedModules.length == 0) {
+	res.status(405).end();
+	return;
+    }
+
+    let expenses = [];
+    let price = parseInt(req.body.price);
+    let name = req.body.name;
+
+    expenses.push(
+	{
+	    description: 'Insurance',
+	    type: 'yearly',
+	    value: parseInt(req.body.insurance)
+	});
+    
+    expenses.push(
+	{
+	    description: 'Community',
+	    type: 'monthly',
+	    value: parseInt(req.body.community)	
+	});
+
+    expenses.push(
+	{
+	    description: 'Energy',
+	    type: 'monthly',
+	    value: parseInt(req.body.energy)
+	});
+
+    expenses.push(
+	{
+	    description: 'Sewerage',
+	    type: 'yearly',
+	    value: parseInt(req.body.sewerage)	
+	});
+    
+    expenses.push(
+	{
+	    description: 'Heat',
+	    type: 'monthly',
+	    value: parseInt(req.body.heat)	
+	});
+
+    loadedModules.push(new House(name, loadedModules[0], price, expenses));
+
+    res.send();
+});
+
 
 app.post('/coupon', function(req, res) {
 	// first of all, an Account should
