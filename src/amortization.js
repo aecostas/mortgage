@@ -176,6 +176,7 @@ app.post('/house', function(req, res) {
 
 
 app.post('/coupon', function(req, res) {
+
 	// first of all, an Account should
 	// have beend created
 	if (loadedModules.length == 0) {
@@ -183,14 +184,14 @@ app.post('/coupon', function(req, res) {
 	    return;
 	}
 
-	let deposit = req.body.deposit;
-	let fund = req.body.fund;
-	let initialMonth = req.body.initialMonth;
+	let deposit = parseInt(req.body.deposit);
+	let fund = parseInt(req.body.fund);
+	let initialMonth = parseInt(req.body.initialMonth);
 	let taxes = JSON.parse(req.body.taxes);
-	let dividend = req.body.dividend;
-	let interest = req.body.interest;
+	let dividend = parseInt(req.body.dividend);
+	let interest = parseInt(req.body.interest);
 
-	loadedModules.push(new CouponStrategy(deposit, 12,fund, initialMonth, loadedModules[0], taxes, dividend, interest))
+	loadedModules.push(new CouponStrategy(deposit, 12, fund, initialMonth, loadedModules[0], taxes, dividend, interest))
 
 	res.send()
     });

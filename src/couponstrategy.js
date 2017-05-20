@@ -28,12 +28,13 @@ class CouponStrategy {
 	this.input = deposit/duration - (deposit/duration)*taxes.suscription;
 	this.deposit[0] = deposit;
 	this.fund[0] = fund;
-	this.month=0;
+	this.month = 0;
 	this.account= account;
 	this.vat = taxes.vat;
 	this.div = dividend;
 	this._name = "CouponStrategy";
-	this.monthPayInterest = duration + 1
+	this.monthPayInterest = duration + 1;
+
     }// constructor
 
     get name() {
@@ -59,6 +60,7 @@ class CouponStrategy {
 
 	// dividend
 	if (this.month%3 == 0) {
+	    console.warn('depositing from fund to account: ', this.fund[this.month]*this.div*(1-this.vat));
 	    this.account.deposit(this._name, "Coupon strategy fund dividend", this.fund[this.month]*this.div*(1-this.vat))
 	}
 
