@@ -4,7 +4,7 @@ class House {
     /**
      *
      * @param Object expenses - Object with name, value, and type, 
-     *  where type in (monthly, annual)
+     *  where type in (monthly, yearly)
      */
     constructor(name, account, price, expenses) {
 	// insurance, community, general, energy, water, sewerage

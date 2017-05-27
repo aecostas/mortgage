@@ -10,6 +10,7 @@ class Car {
 	this.expenses = expenses;   // annual
 	this.fuel = fuel;           // monthly
 	this.insurance = insurance; // annual
+	console.warn(this);
     }
 
     get name() {

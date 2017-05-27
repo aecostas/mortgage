@@ -7,7 +7,6 @@ const Job = require('./job.js');
 const Car = require('./car.js');
 const House = require('./house.js');
 
-
 var express = require('express');
 var app = express();
 var json = require('express-json');
@@ -71,7 +70,7 @@ app.post('/account', function(req, res) {
 })
 
 app.post('/mortgage', function(req, res) {
-	// first of all, an Account should
+        // first of all, an Account should
 	// have beend created
 	if (loadedModules.length==0) {
 	    res.status(405).end();
