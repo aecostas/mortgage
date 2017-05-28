@@ -7,7 +7,7 @@ const Job = require('./job.js');
 const Car = require('./car.js');
 const House = require('./house.js');
 
-var config = require("../data-1.json");
+var config = require("../data-2.json");
 
 var loadedModules = []
 
@@ -90,8 +90,6 @@ function initModules(config) {
 
 initModules(config);
 runSimulation(360);
-
-
 
 
 // TODO:
