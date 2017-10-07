@@ -2,17 +2,53 @@
 
 const Property = require('./Property.js');
 
-class House extends Property{
-    /**
-     *
-     * @param Object expenses - Object with name, value, and type, 
-     *  where type in (monthly, yearly)
-     */
-    constructor(name, account, price, expenses) {
-	// insurance, community, general, energy, water, sewerage
-	super(name, account, price, expenses);
-    }
+class House extends Property {
+/**
+  * @param Object expenses - Object with name, value, and type,
+  *  where type in (monthly, yearly)
+  */
+  constructor(name, account, price, expenses) {
+    // insurance, community, general, energy, water, sewerage
+    let expensesByType = [];
+    expensesByType.push(
+      {
+        "type": "yearly",
+        "value": expenses['insurance'],
+        "description": "Insurance"
+      });
+    expensesByType.push(
+      {
+        "type": "yearly",
+        "value": expenses['general'],
+        "description": "General expenses"
+      });
+    expensesByType.push(
+      {
+        "type": "monthly",
+        "value": expenses['community'],
+        "description": "community"
+      });
+    expensesByType.push(
+      {
+        "type": "monthly",
+        "value": expenses['energy'],
+        "description": "Energy"
+      });
+    expensesByType.push(
+      {
+        "type": "monthly",
+        "value": expenses['water'],
+        "description": "Water"
+      });
+    expensesByType.push(
+      {
+        "type": "yearly",
+        "value": expenses['sewerage'],
+        "description": "100"
+      });
 
+    super(name, account, price, expensesByType);
+  }
 }
 
 module.exports = House;

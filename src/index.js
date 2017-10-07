@@ -7,85 +7,85 @@ const Job = require('./job.js');
 const Car = require('./car.js');
 const House = require('./house.js');
 
-var config = require("../data-2.json");
+var config = require("../house.json");
 
 var loadedModules = []
 
 function runSimulation(duration) {
 
-    for (let month=0; month<duration; month++) {
-	loadedModules.forEach(function(module) {
-	    module.step();
-	});
-    }// for
-
+  for (let month=0; month<duration; month++) {
     loadedModules.forEach(function(module) {
-	if (module instanceof Account) {
-	    let values = module.values();
-	    let prev = parseInt(values[0]);
-	    for (let i = 0; i < 12*3; i++) {
-		let current = parseInt(values[i]);
-		let diff = current - prev;
-
-		console.warn(i + ' ' + current + ' ' + diff );
-		prev = current;
-	    }
-	}
+      module.step();
     });
+  }// for
+
+  loadedModules.forEach(function(module) {
+    if (module instanceof Account) {
+      let values = module.values();
+      let prev = parseInt(values[0]);
+      for (let i = 0; i < 12*3; i++) {
+        let current = parseInt(values[i]);
+        let diff = current - prev;
+
+        console.warn(i + ' ' + current + ' ' + diff );
+        prev = current;
+      }
+    }
+  });
 };
 
 function initModules(config) {
-    for (module of config) {
-	switch (module.type) {
-	    case 'account':
-		let account = new Account(module.data.name, module.data.amount);
-		loadedModules.push(account);
-		break;
+  for (module of config) {
+    switch (module.type) {
+      case 'account':
+      let account = new Account(module.data.name, module.data.amount);
+      loadedModules.push(account);
+      break;
 
-	    case 'mortgage':
-		let mortgage = new Mortgage(
-		    module.data.mortgage,
-		    module.data.interest / 12,
-		    module.data.term,
-		    {},
-		    loadedModules[0]
-		);
-		loadedModules.push(mortgage);
-		break;
+      case 'mortgage':
+      let mortgage = new Mortgage(
+        module.data.mortgage,
+        module.data.interest / 12,
+        module.data.term,
+        {},
+        loadedModules[0]
+      );
+      loadedModules.push(mortgage);
+      break;
 
-	    case 'job':
-		let job = new Job(
-		    module.data.name,
-		    loadedModules[0],
-		    module.data.salary
-		);
-		loadedModules.push(job);
-		break;
-		
-	    case 'house':
-		let house = new House(
-		    module.data.name,
-		    loadedModules[0],
-		    module.data.price,
-		    module.data.expenses
-		);
-		loadedModules.push(house);
-		break;
+      case 'job':
+      let job = new Job(
+        module.data.name,
+        loadedModules[0],
+        module.data.salary
+      );
+      loadedModules.push(job);
+      break;
 
-	    case 'car':
-		let car = new Car(
-		    module.data.name,
-		    loadedModules[0],
-		    module.data.price,
-		    module.data.taxes,
-		    module.data.expenses,
-		    module.data.fuel,
-		    module.data.insurance
-		);
-		loadedModules.push(car);
-		break;
-	}
+      case 'house':
+      let house = new House(
+        module.data.name,
+        loadedModules[0],
+        module.data.price,
+        module.expenses
+      );
+      loadedModules.push(house);
+      break;
+
+      case 'car':
+      let car = new Car(
+        module.data.name,
+        loadedModules[0],
+        module.data.price,
+        module.data.taxes,
+        module.data.expenses,
+        module.data.fuel,
+        module.data.insurance
+      );
+      loadedModules.push(car);
+      break;
     }
+  }
 }
 
 initModules(config);
