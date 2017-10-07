@@ -1,0 +1,24 @@
+[
+  {
+    "type":"account",
+    "data": {
+      "name": "Cuenta principal",
+      "amount": 1000
+    }
+  },
+  {
+    "type": "house",
+    "data": {
+      "name": "Main house",
+      "price": 100000
+    },
+    "expenses": {
+      "insurance": 200,
+      "community": 50,
+      "general": 300,
+      "energy": 40,
+      "water": 50,
+      "sewerage": 50
+    }
+  }
+]

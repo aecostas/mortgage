@@ -1,0 +1,42 @@
+[
+  {
+    "type":"account",
+    "data": {
+      "name": "Cuenta principal",
+      "amount": 1000
+    }
+  },
+  {
+    "type":"job",
+    "data": {
+      "name": "Main job",
+      "salary": 1000
+    }
+  },
+  {
+    "type":"car",
+    "data": {
+      "name": "C4 Grand Picasso",
+      "price": 24000,
+      "taxes": 100,
+      "expenses": 200,
+      "fuel": 35,
+      "insurance": 400
+    }
+  },
+  {
+    "type": "house",
+    "data": {
+      "name": "Main house",
+      "price": 100000
+    },
+    "expenses": {
+      "insurance": 200,
+      "community": 50,
+      "general": 300,
+      "energy": 40,
+      "water": 50,
+      "sewerage": 50
+    }
+  }
+]
