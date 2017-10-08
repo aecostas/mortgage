@@ -30,7 +30,7 @@ function consoleReport() {
       let years = 3;
       let currentYear = 2016;
 
-      for (let year=1; year <= years; year++) {
+      for (let year=0; year < years; year++) {
         console.warn('='.repeat(25)+' '+(currentYear + year)+' '+'='.repeat(25));
 
         for (let month = 1; month <= 12; month++) {
@@ -45,7 +45,7 @@ function consoleReport() {
             diffOutput = diff;
           }
 
-          console.warn(year*month + ' ' + current + ' ' + diffOutput);
+          console.warn(currentMonth + ' ' + current + ' ' + diffOutput);
           prev = current;
         }
       }
@@ -85,6 +85,7 @@ function initModules(config) {
       let house = new House(
         module.data.name,
         loadedModules[0],
+        module.data.start,
         module.data.price,
         module.expenses
       );
@@ -95,6 +96,7 @@ function initModules(config) {
       let car = new Car(
         module.data.name,
         loadedModules[0],
+        module.data.start,
         module.data.price,
         module.expenses
       );

@@ -6,14 +6,14 @@ class Property {
   * @param Object expenses - Object with name, value, and type,
   *  where type in (monthly, yearly)
   */
-  constructor(name, account, price, expenses) {
+  constructor(name, account, start, price, expenses) {
     this._name = name;
     this.account = account;
     this.month = 0;
     this.price = price;
+    this.start = start;
     this.monthlyExpenses = expenses.filter((item) => { return item.type === 'monthly' });
     this.yearlyExpenses = expenses.filter((item) => { return item.type === 'yearly' });
-    console.warn(this.yearlyExpenses);
   }
 
   get name() {
@@ -22,6 +22,10 @@ class Property {
 
   step() {
     this.month += 1;
+
+    if (this.month <this.start) {
+      return;
+    }
 
     for (let expense of this.monthlyExpenses) {
       this.account.extract(this._name, expense.description, expense.value);
