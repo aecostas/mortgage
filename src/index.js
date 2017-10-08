@@ -1,5 +1,7 @@
 "use strict";
 
+var colors = require('colors');
+
 const Account = require('./account.js');
 const Mortgage = require('./mortgage.js');
 const CouponStrategy = require('./couponstrategy.js');
@@ -29,13 +31,21 @@ function consoleReport() {
       let currentYear = 2016;
 
       for (let year=1; year <= years; year++) {
-        console.warn('='.repeat(35)+' '+(currentYear + year)+' '+'='.repeat(35));
+        console.warn('='.repeat(25)+' '+(currentYear + year)+' '+'='.repeat(25));
 
         for (let month = 1; month <= 12; month++) {
-          let current = parseInt(values[year*month]);
+          let currentMonth = year*12 + month;
+          let current = parseInt(values[currentMonth]);
           let diff = current - prev;
+          let diffOutput;
 
-          console.warn(year*month + ' ' + current + ' ' + diff );
+          if (diff < 0) {
+            diffOutput = colors.red(diff);
+          } else {
+            diffOutput = diff;
+          }
+
+          console.warn(year*month + ' ' + current + ' ' + diffOutput);
           prev = current;
         }
       }
@@ -86,10 +96,7 @@ function initModules(config) {
         module.data.name,
         loadedModules[0],
         module.data.price,
-        module.data.taxes,
-        module.data.expenses,
-        module.data.fuel,
-        module.data.insurance
+        module.expenses
       );
       loadedModules.push(car);
       break;
