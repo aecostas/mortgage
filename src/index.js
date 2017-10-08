@@ -7,7 +7,7 @@ const Job = require('./job.js');
 const Car = require('./car.js');
 const House = require('./house.js');
 
-var config = require("../house.json");
+var config = require("../data.json");
 
 var loadedModules = []
 
@@ -18,17 +18,26 @@ function runSimulation(duration) {
       module.step();
     });
   }// for
+}
 
-  loadedModules.forEach(function(module) {
+function consoleReport() {
+    loadedModules.forEach(function(module) {
     if (module instanceof Account) {
       let values = module.values();
       let prev = parseInt(values[0]);
-      for (let i = 0; i < 12*3; i++) {
-        let current = parseInt(values[i]);
-        let diff = current - prev;
+      let years = 3;
+      let currentYear = 2016;
 
-        console.warn(i + ' ' + current + ' ' + diff );
-        prev = current;
+      for (let year=1; year <= years; year++) {
+        console.warn('='.repeat(35)+' '+(currentYear + year)+' '+'='.repeat(35));
+
+        for (let month = 1; month <= 12; month++) {
+          let current = parseInt(values[year*month]);
+          let diff = current - prev;
+
+          console.warn(year*month + ' ' + current + ' ' + diff );
+          prev = current;
+        }
       }
     }
   });
@@ -90,7 +99,7 @@ function initModules(config) {
 
 initModules(config);
 runSimulation(360);
-
+consoleReport();
 
 // TODO:
 //    * modelar liquidar de golpe (cuando el capital pendiente sea igual a una cantidad dada)
