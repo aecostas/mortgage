@@ -8,7 +8,6 @@ class House extends Property {
   *  where type in (monthly, yearly)
   */
   constructor(name, account, price, expenses) {
-    // insurance, community, general, energy, water, sewerage
     let expensesByType = [];
     expensesByType.push(
       {
