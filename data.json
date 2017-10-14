@@ -3,14 +3,15 @@
     "type":"account",
     "data": {
       "name": "Cuenta principal",
-      "amount": 1000
+      "amount": 5000
     }
   },
   {
     "type":"job",
     "data": {
       "name": "Main job",
-      "salary": 1000
+      "salary": 1000,
+      "start": 1
     }
   },
   {
@@ -46,9 +47,9 @@
   {
     "type": "mortgage",
     "data": {
-      "mortgage": 100000,
+      "mortgage": 95000,
       "interest": 0.8,
-      "term": 360
+      "term": 341
     }
   },
   {

@@ -3,7 +3,7 @@
 const Property = require('./Property.js');
 
 class Car extends Property{
-  constructor(name, account, price, expenses) {
+  constructor(name, account, start, price, expenses) {
     let expensesByType = [];
 
     expensesByType.push(
@@ -34,9 +34,12 @@ class Car extends Property{
         "description": "Insurance"
       });
 
-    super(name, account, price, expensesByType);
+    super(name, account, start, price, expensesByType);
   }
 
+  getCurrentPrice() {
+    return this.price;
+  }
 }
 
 module.exports = Car;

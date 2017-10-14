@@ -7,7 +7,7 @@ class House extends Property {
   * @param Object expenses - Object with name, value, and type,
   *  where type in (monthly, yearly)
   */
-  constructor(name, account, price, expenses) {
+  constructor(name, account, start, price, expenses) {
     let expensesByType = [];
     expensesByType.push(
       {
@@ -46,7 +46,11 @@ class House extends Property {
         "description": "100"
       });
 
-    super(name, account, price, expensesByType);
+    super(name, account, start, price, expensesByType);
+  }
+
+  getCurrentPrice() {
+    return this.price;
   }
 }
 
