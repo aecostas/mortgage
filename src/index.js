@@ -118,20 +118,3 @@ initModules(config);
 runSimulation(360);
 
 report.report(loadedModules, tangibleAssets, monthlyDebt, 10, 2016);
-
-
-// TODO:
-//    * modelar liquidar de golpe (cuando el capital pendiente sea igual a una cantidad dada)
-//    * euribor variable
-//    * inversion de ahorro
-//    * ligar ahorro con amortizaciones parciales??
-//    * parametrizar ahorro mensual
-//    * calcular porcentaje de intereses pagados y pendientes de pagar
-//    * corregir valores de primer y último mes
-//    * [frontend] varias simulaciones. Mostrar solo una tabla al mismo tiempo.
-//                 Tarjetas para elegir qué datos se agregan a gráficas
-//    * encapsular los ingresos en cuenta como objetos para saber de donde vienen
-//    * mover ahorros teniendo en cuenta IPC a cuenta
-// configurar coupon strategy para que se genere automáticamente cuando  hay más de cierta cantidad en cuenta. Lo mismo para un depósito
-
-// constructores con mismma firma que house

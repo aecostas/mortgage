@@ -1,0 +1,11 @@
+1) modelar liquidar de golpe (cuando el capital pendiente sea igual a una cantidad dada)
+2) euribor variable
+3) inversion de ahorro
+4) ligar ahorro con amortizaciones parciales??
+5) parametrizar ahorro mensual
+6) calcular porcentaje de intereses pagados y pendientes de pagar
+7) corregir valores de primer y último mes
+8) encapsular los ingresos en cuenta como objetos para saber de donde vienen
+9) mover ahorros teniendo en cuenta IPC a cuenta
+10) configurar coupon strategy para que se genere automáticamente
+    cuando hay más de cierta cantidad en cuenta. Lo mismo para un depósito
