@@ -1,7 +1,5 @@
 "use strict";
 
-var colors = require('colors');
-
 const Account = require('./account.js');
 const Mortgage = require('./mortgage.js');
 const CouponStrategy = require('./couponstrategy.js');
@@ -9,6 +7,8 @@ const Job = require('./job.js');
 const Car = require('./car.js');
 const House = require('./house.js');
 const Property = require('./Property.js');
+
+const ConsoleReport = require('./consoleReport.js');
 
 var config = require("../data.json");
 
@@ -35,36 +35,6 @@ function runSimulation(duration) {
     });
   }// for
 }
-
-function consoleReport(years) {
-    loadedModules.forEach(function(module) {
-    if (module instanceof Account) {
-      let values = module.values();
-      let prev = parseInt(values[0]);
-      let currentYear = 2016;
-
-      for (let year=0; year < years; year++) {
-        console.warn('='.repeat(25)+' '+(currentYear + year)+' '+'='.repeat(25));
-
-        for (let month = 1; month <= 12; month++) {
-          let currentMonth = year*12 + month;
-          let current = parseInt(values[currentMonth]);
-          let diff = current - prev;
-          let diffOutput;
-
-          if (diff < 0) {
-            diffOutput = colors.red(diff);
-          } else {
-            diffOutput = diff;
-          }
-
-          console.warn(currentMonth + ' ' + current + ' ' + diffOutput + ' --- ' + tangibleAssets[currentMonth] +' --- ' + monthlyDebt[currentMonth]);
-          prev = current;
-        }
-      }
-    }
-  });
-};
 
 function initModules(config) {
   for (module of config) {
@@ -120,9 +90,11 @@ function initModules(config) {
   }
 }
 
+let report = new ConsoleReport();
+
 initModules(config);
 runSimulation(360);
-consoleReport(4);
+report.report(loadedModules, tangibleAssets, monthlyDebt, 4);
 
 // TODO:
 //    * modelar liquidar de golpe (cuando el capital pendiente sea igual a una cantidad dada)
