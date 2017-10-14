@@ -7,7 +7,7 @@ const Account = require('./account.js');
 
 class ConsoleReport {
 
-  report(modules, assets, debt, years) {
+  report(modules, assets, debt, years, currentYear) {
     var table = new Table({
       head: ['Month', 'Account', 'Diff', 'Assets', 'Debt']
     });
@@ -16,16 +16,20 @@ class ConsoleReport {
       if (module instanceof Account) {
         let values = module.values();
         let prev = parseInt(values[0]);
-        let currentYear = 2016;
 
         for (let year=0; year < years; year++) {
-//          console.warn('='.repeat(25)+' '+(currentYear + year)+' '+'='.repeat(25));
 
           for (let month = 1; month <= 12; month++) {
             let currentMonth = year*12 + month;
             let currentAccountMoney = parseInt(values[currentMonth]);
             let diff = currentAccountMoney - prev;
-            let diffOutput;
+            let diffOutput, currentAccountMoneyOutput;
+
+            if (currentAccountMoney < 0) {
+              currentAccountMoneyOutput = colors.red(currentAccountMoney);
+            } else {
+              currentAccountMoneyOutput = currentAccountMoney;
+            }
 
             if (diff < 0) {
               diffOutput = colors.red(diff);
@@ -35,7 +39,7 @@ class ConsoleReport {
 
             let row = [];
             row.push(month+'/'+(currentYear + year));
-            row.push(currentAccountMoney);
+            row.push(currentAccountMoneyOutput);
             row.push(diffOutput);
             row.push(assets[currentMonth]);
             row.push(parseInt(debt[currentMonth]));
