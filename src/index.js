@@ -6,6 +6,7 @@ const CouponStrategy = require('./couponstrategy.js');
 const Job = require('./job.js');
 const Car = require('./car.js');
 const House = require('./house.js');
+const Life = require('./life.js');
 const Property = require('./Property.js');
 
 const ConsoleReport = require('./consoleReport.js');
@@ -86,6 +87,13 @@ function initModules(config) {
       );
       loadedModules.push(car);
       break;
+
+      case 'life':
+      let life = new Life(
+          loadedModules[0],
+          module.expenses
+      );
+      break;
     }
   }
 }
@@ -94,7 +102,7 @@ let report = new ConsoleReport();
 
 initModules(config);
 runSimulation(360);
-report.report(loadedModules, tangibleAssets, monthlyDebt, 4);
+report.report(loadedModules, tangibleAssets, monthlyDebt, 10);
 
 // TODO:
 //    * modelar liquidar de golpe (cuando el capital pendiente sea igual a una cantidad dada)
