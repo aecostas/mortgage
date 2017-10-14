@@ -15,7 +15,8 @@
       "gulp-istanbul": "0.10.3",
       "gulp-eslint": "^1.1.1",
       "gulp-util": "3.0.7",
-      "colors": "1.1.2"
+      "colors": "1.1.2",
+      "cli-table": "0.3.1"
   },
   "repository": {},
   "devDependencies": {
