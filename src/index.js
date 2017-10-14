@@ -13,8 +13,11 @@ const Property = require('./Property.js');
 var config = require("../data.json");
 
 var loadedModules = [];
+var monthlyDebt = new Array(360);
 var tangibleAssets = new Array(360);
+
 tangibleAssets.fill(0);
+monthlyDebt.fill(0);
 
 function runSimulation(duration) {
 
@@ -24,6 +27,10 @@ function runSimulation(duration) {
 
       if (module instanceof Property) {
         tangibleAssets[month] += module.getCurrentPrice();
+      }
+
+      if (module instanceof Mortgage) {
+        monthlyDebt[month] += module.getPendingCapital();
       }
     });
   }// for
@@ -51,7 +58,7 @@ function consoleReport(years) {
             diffOutput = diff;
           }
 
-          console.warn(currentMonth + ' ' + current + ' ' + diffOutput + ' --- ' + tangibleAssets[currentMonth]);
+          console.warn(currentMonth + ' ' + current + ' ' + diffOutput + ' --- ' + tangibleAssets[currentMonth] +' --- ' + monthlyDebt[currentMonth]);
           prev = current;
         }
       }
