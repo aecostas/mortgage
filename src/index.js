@@ -71,6 +71,7 @@ function initModules(config) {
         module.data.name,
         loadedModules[0],
         module.data.start,
+        module.data.incoming,
         module.data.price,
         module.expenses
       );
@@ -82,6 +83,7 @@ function initModules(config) {
         module.data.name,
         loadedModules[0],
         module.data.start,
+        module.data.incoming,
         module.data.price,
         module.expenses
       );
@@ -93,6 +95,8 @@ function initModules(config) {
           loadedModules[0],
           module.expenses
       );
+      loadedModules.push(life);
+
       break;
     }
   }
@@ -102,7 +106,8 @@ let report = new ConsoleReport();
 
 initModules(config);
 runSimulation(360);
-report.report(loadedModules, tangibleAssets, monthlyDebt, 10);
+
+report.report(loadedModules, tangibleAssets, monthlyDebt, 10, 2016);
 
 // TODO:
 //    * modelar liquidar de golpe (cuando el capital pendiente sea igual a una cantidad dada)
