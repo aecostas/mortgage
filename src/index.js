@@ -51,7 +51,7 @@ function consoleReport(years) {
             diffOutput = diff;
           }
 
-          console.warn(currentMonth + ' ' + current + ' ' + diffOutput);
+          console.warn(currentMonth + ' ' + current + ' ' + diffOutput + ' --- ' + tangibleAssets[currentMonth]);
           prev = current;
         }
       }
