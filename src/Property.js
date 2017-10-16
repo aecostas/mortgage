@@ -40,14 +40,19 @@ class Property {
     }
 
     for (let expense of this.monthlyExpenses) {
-      this.account.extract(this._name, expense.description, expense.value);
+      if (expense.value != 0) {
+        this.account.extract(this._name, expense.description, expense.value);
+      }
     }
 
     if ((this.month % 12) === 0) {
       for (let expense of this.yearlyExpenses) {
-        this.account.extract(this._name, expense.description, expense.value);
+        if (expense.value != 0) {
+          this.account.extract(this._name, expense.description, expense.value);
+        }
       }
     }
+
   }
 }
 
