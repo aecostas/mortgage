@@ -26,7 +26,7 @@ class Life extends Property {
         "description": "food"
       });
 
-    super('Life', account, 0, 0, 0, expensesByType);
+    super('Life', account, 0, Number.MAX_VALUE, 0, 0, expensesByType);
   }
 
   getCurrentPrice() {

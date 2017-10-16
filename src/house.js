@@ -7,7 +7,7 @@ class House extends Property {
   * @param Object expenses - Object with name, value, and type,
   *  where type in (monthly, yearly)
   */
-  constructor(name, account, start,incoming,price, expenses) {
+  constructor(name, account, start, stop, incoming, price, expenses) {
     let expensesByType = [];
     expensesByType.push(
       {
@@ -46,12 +46,18 @@ class House extends Property {
         "description": "100"
       });
 
-    super(name, account, start, incoming, price, expensesByType);
+    super(name, account, start, stop, incoming, price, expensesByType);
   }
 
   getCurrentPrice() {
-    return this.price;
+    if (this.isActive()) {
+      return this.price;
+    } else {
+      console.warn('current price is zero');
+      return 0;
+    }
   }
+
 }
 
 module.exports = House;

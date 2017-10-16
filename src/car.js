@@ -3,7 +3,7 @@
 const Property = require('./Property.js');
 
 class Car extends Property{
-  constructor(name, account, start, incoming, price, expenses) {
+  constructor(name, account, start, stop, incoming, price, expenses) {
     let expensesByType = [];
 
     expensesByType.push(
@@ -29,16 +29,28 @@ class Car extends Property{
 
     expensesByType.push(
       {
+        "type": "monthly",
+        "value": expenses['rent'],
+        "description": "rent"
+      });
+
+    expensesByType.push(
+      {
         "type": "yearly",
         "value": expenses['insurance'],
         "description": "Insurance"
       });
 
-    super(name, account, start, incoming, price, expensesByType);
+    super(name, account, start, stop, incoming, price, expensesByType);
   }
 
   getCurrentPrice() {
-    return this.price;
+    if (this.isActive()) {
+      return this.price;
+    } else {
+      console.warn('current price is zero');
+      return 0;
+    }
   }
 }
 

@@ -69,6 +69,7 @@ function initModules(config) {
         module.data.name,
         loadedModules[0],
         module.data.start,
+        module.data.stop,
         module.data.incoming,
         module.data.price,
         module.expenses
@@ -81,6 +82,7 @@ function initModules(config) {
         module.data.name,
         loadedModules[0],
         module.data.start,
+        module.data.stop, 
         module.data.incoming,
         module.data.price,
         module.expenses
@@ -117,4 +119,4 @@ var config = require(options.config);
 initModules(config);
 runSimulation(360);
 
-report.report(loadedModules, tangibleAssets, monthlyDebt, 10, 2016);
+report.report(loadedModules, tangibleAssets, monthlyDebt, 30, 2016);

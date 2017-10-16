@@ -6,12 +6,13 @@ class Property {
   * @param Object expenses - Object with name, value, and type,
   *  where type in (monthly, yearly)
   */
-  constructor(name, account, start, incoming, price, expenses) {
+  constructor(name, account, start, stop, incoming, price, expenses) {
     this._name = name;
     this.account = account;
     this.month = 0;
     this.price = price;
     this.start = start;
+    this.stop = stop;
     this.incoming = incoming;
     this.monthlyExpenses = expenses.filter((item) => { return item.type === 'monthly' });
     this.yearlyExpenses = expenses.filter((item) => { return item.type === 'yearly' });
@@ -30,10 +31,18 @@ class Property {
 
   }
 
+  isActive() {
+      if ((this.month < this.start) || (this.month > this.stop)) {
+        return false;
+      } else {
+        return true;
+      }
+  }
+
   step() {
     this.month += 1;
 
-    if (this.month < this.start) {
+    if (!this.isActive()) {
       return;
     } else if (this.month == this.start) {
       this.account.extract(this._name, 'Incoming payment', this.incoming);
