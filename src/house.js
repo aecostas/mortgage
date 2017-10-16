@@ -39,6 +39,7 @@ class House extends Property {
         "value": expenses['water'],
         "description": "Water"
       });
+
     expensesByType.push(
       {
         "type": "yearly",
@@ -53,7 +54,6 @@ class House extends Property {
     if (this.isActive()) {
       return this.price;
     } else {
-      console.warn('current price is zero');
       return 0;
     }
   }

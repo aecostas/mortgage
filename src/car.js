@@ -48,7 +48,6 @@ class Car extends Property{
     if (this.isActive()) {
       return this.price;
     } else {
-      console.warn('current price is zero');
       return 0;
     }
   }
