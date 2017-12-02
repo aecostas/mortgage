@@ -113,8 +113,35 @@ var options = require( "yargs" )
 
 let report = new ConsoleReport();
 var config = require(options.config);
+let duration = 360;
 
 initModules(config);
-runSimulation(360);
+runSimulation(duration);
 
 report.report(loadedModules, tangibleAssets, monthlyDebt, 30, 2016);
+
+for (module of loadedModules) {
+	let values;
+	let total;
+	let yearly;
+
+	if (module instanceof Mortgage) {
+		console.warn('Skipping mortgage');
+		continue;
+	}
+
+	if (module instanceof Account) {
+		continue;
+	}
+
+	values = loadedModules[0].movements.filter( (item) => {return item.peer == module.name});
+	total = values.reduce( (acc, value) => acc + value.amount , 0);
+
+ 	if  (module.stop === undefined || module.stop === Number.MAX_VALUE) {
+		yearly = total / (duration / 12);
+	} else {
+		yearly = total / ((module.stop - module.start) / 12)
+	}
+
+	console.warn(module.name + ": " + total + ": " + yearly)
+}

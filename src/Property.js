@@ -11,11 +11,19 @@ class Property {
     this.account = account;
     this.month = 0;
     this.price = price;
-    this.start = start;
-    this.stop = stop;
+    this._start = start;
+    this._stop = stop;
     this.incoming = incoming;
     this.monthlyExpenses = expenses.filter((item) => { return item.type === 'monthly' });
     this.yearlyExpenses = expenses.filter((item) => { return item.type === 'yearly' });
+  }
+
+  get start() {
+	  return this._start;
+  }
+
+  get stop() {
+	  return this._stop;
   }
 
   get name() {
@@ -30,7 +38,7 @@ class Property {
   }
 
   isActive() {
-      if ((this.month < this.start) || (this.month > this.stop)) {
+      if ((this.month < this._start) || (this.month > this._stop)) {
         return false;
       } else {
         return true;
