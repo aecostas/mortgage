@@ -22,13 +22,11 @@ class Property {
     return this._name;
   }
 
-
   /**
   * Returns the price of this property at the current month
   * taking into account its devaluation function
   */
   getCurrentPrice() {
-
   }
 
   isActive() {

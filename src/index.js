@@ -105,12 +105,9 @@ function initModules(config) {
 
 var options = require( "yargs" )
     .usage( "Usage: $0 [-c \"config file\"] [-r \"reporter\"]")
-//    .option( "r", { alias: "report", demand: true, describe: "Report backend", type: "string" } )
     .option( "c", { alias: "config", demand: true, describe: "Configuration", type: "string" } )
     .help( "?" )
     .alias( "?", "help" )
-//    .example( "$0 https://example.com/api/posts", "Get a list of posts" )
-//    .example( "$0 https://example.com/api/posts --post --data \"{ 'title': 'Avast ye!', 'body': 'Thar be a post hyar!'}\"", "Create a new post" )
     .epilog( "Copyright 2017 Andrés Estévez" )
     .argv;
 
