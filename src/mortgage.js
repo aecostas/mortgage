@@ -2,11 +2,12 @@
 
 class Mortgage {
 
-  constructor(mortgage, interest, term, partial_amortizations, account) {
+  constructor(mortgage, interest, start, term, partial_amortizations, account) {
     this.N = term;
     this.currentMonth=1;
     this.interest = interest;
     this.capital = mortgage;
+	this.start = start;
     this._payment = this.capital*interest/(100*(1 - Math.pow((1+interest/100), -term) ));
     this.monthlyPayments = []
     this.sumInterest = 0
@@ -75,6 +76,12 @@ class Mortgage {
     }
 
     step() {
+	  this.currentMonth += 1;
+
+	  if (this.currentMonth < this.start) {
+		  return;
+	  }
+
       if (this._status=="FINISHED") return;
 
       let extra=0
@@ -117,7 +124,7 @@ class Mortgage {
         this._status = "FINISHED"
       }
 
-      this.currentMonth +=1
+//      this.currentMonth +=1
     }
 
     values() {

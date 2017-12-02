@@ -1,0 +1,74 @@
+[
+  {
+    "type":"account",
+    "data": {
+      "name": "Cuenta principal",
+      "amount": 5000
+    }
+  },
+  {
+    "type":"job",
+    "data": {
+      "name": "Main job",
+      "salary": 1700,
+      "start": 1
+    }
+  },
+  {
+    "type":"life",
+    "expenses": {
+      "holidays": 1000,
+      "food": 350,
+      "general": 100
+    }
+  },
+  {
+    "type":"car",
+    "data": {
+      "name": "C4 Grand Picasso",
+      "price": 24000,
+      "incoming": 10000,
+      "start": 13
+    },
+    "expenses": {
+      "taxes": 100,
+      "general": 200,
+      "fuel": 35,
+      "insurance": 400,
+      "rent": 0
+    }
+  },
+  {
+    "type": "house",
+    "data": {
+      "name": "Main house",
+      "price": 135000,
+      "incoming": 0,
+      "start": 1
+    },
+    "expenses": {
+      "insurance": 200,
+      "community": 50,
+      "general": 300,
+      "energy": 40,
+      "water": 50,
+      "sewerage": 50
+    }
+  },
+  {
+    "type": "mortgage",
+    "data": {
+      "mortgage": 95000,
+      "interest": 0.8,
+      "term": 341
+    }
+  },
+  {
+    "type": "mortgage",
+    "data": {
+      "mortgage": 15000,
+      "interest": 7,
+      "term": 84
+    }
+  }
+]

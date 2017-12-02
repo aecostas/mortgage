@@ -47,6 +47,7 @@ function initModules(config) {
       let mortgage = new Mortgage(
         module.data.mortgage,
         module.data.interest / 12,
+		module.data.start,
         module.data.term,
         {},
         loadedModules[0]
@@ -82,7 +83,7 @@ function initModules(config) {
         module.data.name,
         loadedModules[0],
         module.data.start,
-        module.data.stop, 
+        module.data.stop,
         module.data.incoming,
         module.data.price,
         module.expenses

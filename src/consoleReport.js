@@ -19,7 +19,7 @@ class ConsoleReport {
 
         for (let year=0; year < years; year++) {
 
-          for (let month = 1; month <= 12; month++) {
+          for (let month = 1; month <= 12; month=month+12) {
             let currentMonth = year*12 + month;
             let currentAccountMoney = parseInt(values[currentMonth]);
             let diff = currentAccountMoney - prev;

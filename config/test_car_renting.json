@@ -1,0 +1,26 @@
+[
+  {
+    "type":"account",
+    "data": {
+      "name": "Cuenta principal",
+      "amount": 10000
+    }
+  },
+  {
+    "type":"car",
+    "data": {
+      "name": "C4 Grand Picasso",
+      "price": 0,
+      "incoming": 0,
+      "start": 1,
+      "stop": 144
+    },
+    "expenses": {
+      "taxes": 0,
+      "general": 0,
+      "fuel": 35,
+      "insurance": 0,
+      "rent": 250
+    }
+  }
+]
