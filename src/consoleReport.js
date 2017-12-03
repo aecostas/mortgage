@@ -61,10 +61,10 @@ class ConsoleReport {
 			let total;
 			let yearly;
 
-			if (module instanceof Mortgage) {
-				console.warn('Skipping mortgage');
-				continue;
-			}
+//			if (module instanceof Mortgage) {
+//				console.warn('Skipping mortgage');
+//				continue;
+//			}
 
 			if (module instanceof Account) {
 				continue;
@@ -80,7 +80,7 @@ class ConsoleReport {
 			}
 
 			module.expenses = total;
-			console.warn(module.name + ": " + total + ": " + yearly)
+			console.warn(module.name + ":\n\t " + Math.ceil(total) + "\n\t " + Math.ceil(yearly))
 		}
 
 	}
