@@ -30,6 +30,15 @@ class Property {
     return this._name;
   }
 
+  set expenses(total) {
+	  this._expenses = total;
+  }
+
+  get expenses() {
+	  return this._expenses;
+  }
+
+
   /**
   * Returns the price of this property at the current month
   * taking into account its devaluation function
