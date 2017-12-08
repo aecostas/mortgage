@@ -20,7 +20,7 @@ class ConsoleReport {
 
 				for (let year=0; year < years; year++) {
 
-					for (let month = 1; month <= 12; month=month+12) {
+					for (let month = 1; month <= 12; month=month+2) {
 						let currentMonth = year*12 + month;
 						let currentAccountMoney = parseInt(values[currentMonth]);
 						let diff = currentAccountMoney - prev;
@@ -42,7 +42,7 @@ class ConsoleReport {
 						row.push(month+'/'+(currentYear + year));
 						row.push(currentAccountMoneyOutput);
 						row.push(diffOutput);
-						row.push(assets[currentMonth]);
+						row.push(parseInt(assets[currentMonth]));
 						row.push(parseInt(debt[currentMonth]));
 						table.push(row);
 

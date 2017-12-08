@@ -25,7 +25,8 @@ function runSimulation(duration) {
       module.step();
 
       if (module instanceof Property) {
-        tangibleAssets[month] += module.getCurrentPrice();
+//		  console.warn('Current value: ', module.getCurrentValue())
+		  tangibleAssets[month] += module.getCurrentValue();
       }
 
       if (module instanceof Mortgage) {
@@ -86,7 +87,8 @@ function initModules(config) {
         module.data.stop,
         module.data.incoming,
         module.data.price,
-        module.expenses
+        module.expenses,
+		module.data.decay
       );
       loadedModules.push(car);
       break;

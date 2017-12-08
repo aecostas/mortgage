@@ -6,7 +6,7 @@ class Property {
   * @param Object expenses - Object with name, value, and type,
   *  where type in (monthly, yearly)
   */
-  constructor(name, account, start, stop, incoming, price, expenses) {
+  constructor(name, account, start, stop, incoming, price, expenses, decay=1) {
     this._name = name;
     this.account = account;
     this.month = 0;
@@ -14,6 +14,7 @@ class Property {
     this._start = start;
     this._stop = stop;
     this.incoming = incoming;
+	this.decay = decay;
     this.monthlyExpenses = expenses.filter((item) => { return item.type === 'monthly' });
     this.yearlyExpenses = expenses.filter((item) => { return item.type === 'yearly' });
   }
@@ -38,12 +39,17 @@ class Property {
 	  return this._expenses;
   }
 
-
   /**
   * Returns the price of this property at the current month
   * taking into account its devaluation function
   */
-  getCurrentPrice() {
+  getCurrentValue() {
+	  if (this.isActive()) {
+		console.warn(this.price);
+		return this.price*Math.pow(this.decay, (this.month - this.start)/12);
+  	} else {
+		return 0;
+  	}
   }
 
   isActive() {
