@@ -132,8 +132,14 @@ class Mortgage {
     }
 
     getPendingCapital() {
-      return this.capital;
+		if (this.currentMonth < this.start) {
+			return 0;
+		} else {
+			return this.capital;
+		}
     }
+
+
 
     /**
     * Returns the status of the mortgage: OPEN if there is
