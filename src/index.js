@@ -25,7 +25,6 @@ function runSimulation(duration) {
       module.step();
 
       if (module instanceof Property) {
-//		  console.warn('Current value: ', module.getCurrentValue())
 		  tangibleAssets[month] += module.getCurrentValue();
       }
 

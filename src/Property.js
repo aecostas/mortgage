@@ -45,7 +45,6 @@ class Property {
   */
   getCurrentValue() {
 	  if (this.isActive()) {
-		console.warn(this.price);
 		return this.price*Math.pow(this.decay, (this.month - this.start)/12);
   	} else {
 		return 0;

@@ -38,7 +38,7 @@ class ConsoleReport {
 				let movements = module.movements;
 				let prev = parseInt(values[0]);
 				for (let year=0; year < years; year++) {
-					for (let month = 1; month <= 12; month=month+2) {
+					for (let month = 1; month <= 12; month+=1) {
 						let currentMonth = year*12 + month;
 						let currentAccountMoney = parseInt(values[currentMonth]);
 						let diff = currentAccountMoney - prev;
