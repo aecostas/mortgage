@@ -104,6 +104,54 @@ function initModules(config) {
   }
 }
 
+function mining(modules, assets, debt, years, currentYear) {
+	let _this = this;
+	let monthlyData = [];
+
+	modules.forEach(function(module) {
+		if (module instanceof Account) {
+			let values = module.values();
+			let movements = module.movements;
+			let prev = parseInt(values[0]);
+
+			for (let year=0; year < years; year++) {
+				for (let month = 1; month <= 12; month+=1) {
+					let currentMonth = year*12 + month;
+					let currentAccountMoney = parseInt(values[currentMonth]);
+					let diff = currentAccountMoney - prev;
+					// calculate incomes for this month
+					// TODO: review this implementation
+					let incomes = module.movements.filter( (item) => {
+						return item.amount > 0 && item.month == currentMonth;
+					});
+					let totalIncomes = incomes.reduce( (acc, value) => acc + value.amount, 0);
+
+					// TODO: replace 'Mortgage' with a type/class
+					let monthDebt = module.movements.filter( (item) => {
+						return item.peer == 'Mortgage' && item.month == currentMonth;
+					});
+					let totalMonthDebt = monthDebt.reduce( (acc, value) => acc + value.amount, 0);
+
+					let data = {}
+					data.month = currentMonth;
+					data.date = month+'/'+(currentYear + year);
+					data.money = currentAccountMoney;
+					data.diff = diff;
+					data.assets = assets[currentMonth];
+					data.debt = debt[currentMonth];
+					data.assets_money_over_debt = ((currentAccountMoney + assets[currentMonth]) / debt[currentMonth])*100;
+					data.debt_over_incomes = (Math.abs(totalMonthDebt) / totalIncomes) * 100;
+
+					monthlyData.push(data);
+					prev = currentAccountMoney;
+				}
+			}
+		}
+	});
+
+	return monthlyData;
+}
+
 var options = require( "yargs" )
     .usage( "Usage: $0 [-c \"config file\"] [-r \"reporter\"]")
     .option( "c", { alias: "config", demand: true, describe: "Configuration", type: "string" } )
@@ -119,5 +167,7 @@ let duration = 360;
 initModules(config);
 runSimulation(duration);
 
-report.report(loadedModules, tangibleAssets, monthlyDebt, 30, 2016);
-report.summary(loadedModules, duration);
+let jsonreport = mining(loadedModules, tangibleAssets, monthlyDebt, 30, 2016)
+
+report.report(jsonreport);
+//report.summary(loadedModules, duration);

@@ -17,7 +17,7 @@ class ConsoleReport {
 		return output;
 	}
 
-	report(modules, assets, debt, years, currentYear) {
+	report(data, currentYear) {
 		let _this = this;
 		let header = [];
 		header.push('Month');
@@ -28,51 +28,25 @@ class ConsoleReport {
 		header.push('Debt');
 		header.push('assets&account\nover debt (%)');
 		header.push('debt over\nincomes (%)');
+
 		var table = new Table({
 			head: header
 		});
 
-		modules.forEach(function(module) {
-			if (module instanceof Account) {
-				let values = module.values();
-				let movements = module.movements;
-				let prev = parseInt(values[0]);
-				for (let year=0; year < years; year++) {
-					for (let month = 1; month <= 12; month+=1) {
-						let currentMonth = year*12 + month;
-						let currentAccountMoney = parseInt(values[currentMonth]);
-						let diff = currentAccountMoney - prev;
+		for (let row of data) {
+			let tablerow = [];
 
-						// calculate incomes for this month
-						// TODO: review this implementation
-						let incomes = module.movements.filter( (item) => {
-							return item.amount > 0 && item.month == currentMonth;
-						});
-						let totalIncomes = incomes.reduce( (acc, value) => acc + value.amount, 0);
+			tablerow.push(row.month);
+			tablerow.push(row.date);
+			tablerow.push( _this._redOutput(row.money));
+			tablerow.push( _this._redOutput(row.diff));
+			tablerow.push( parseInt(row.assets));
+			tablerow.push( parseInt(row.debt));
+			tablerow.push( parseInt(row.assets_money_over_debt));
+			tablerow.push( parseInt(row.debt_over_incomes));
 
-						// TODO: replace 'Mortgage' with a type/class
-						let monthDebt = module.movements.filter( (item) => {
-							return item.peer == 'Mortgage' && item.month == currentMonth;
-						});
-						let totalMonthDebt = monthDebt.reduce( (acc, value) => acc + value.amount, 0);
-
-						let row = [];
-						row.push(currentMonth);
-						row.push(month+'/'+(currentYear + year));
-						row.push( _this._redOutput(currentAccountMoney));
-						row.push( _this._redOutput(diff));
-						row.push( parseInt(assets[currentMonth]));
-						row.push( parseInt(debt[currentMonth]));
-						row.push( parseInt(((currentAccountMoney + assets[currentMonth]) / debt[currentMonth])*100) );
-						row.push( parseInt(( Math.abs(totalMonthDebt) / totalIncomes) * 100));
-						table.push(row);
-
-						prev = currentAccountMoney;
-					}
-				}
-			}
-		});
-
+			table.push(tablerow);
+		}
 		console.log(table.toString());
 	}
 
