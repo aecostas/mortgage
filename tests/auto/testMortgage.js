@@ -24,7 +24,7 @@ describe('Mortgage with partial amortizations extra', function () {
 
 	before(function() {
 		account = new Account("Main account", 0);
-		mortgage = new Mortgage(100000, 1.2/12, 30*12, amortization, account);
+		mortgage = new Mortgage(100000, 1.2/12, 0, 30*12, amortization, account);
 	});
 
 	it('Get values after first iteration', function() {
