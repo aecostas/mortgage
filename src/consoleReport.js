@@ -4,7 +4,6 @@ var colors = require('colors');
 var Table = require('cli-table');
 
 const Account = require('./account.js');
-const Mortgage = require('./mortgage.js');
 
 class ConsoleReport {
 
@@ -38,8 +37,8 @@ class ConsoleReport {
 
 			tablerow.push(row.month);
 			tablerow.push(row.date);
-			tablerow.push( _this._redOutput(row.money));
-			tablerow.push( _this._redOutput(row.diff));
+			tablerow.push( _this._redOutput(row.money.toFixed(2)));
+			tablerow.push( _this._redOutput(row.diff.toFixed(2)));
 			tablerow.push( parseInt(row.assets));
 			tablerow.push( parseInt(row.debt));
 			tablerow.push( parseInt(row.assets_money_over_debt));
