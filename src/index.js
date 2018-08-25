@@ -10,10 +10,12 @@ const Life = require('./life.js');
 const Property = require('./Property.js');
 
 const ConsoleReport = require('./consoleReport.js');
+const CSVReport = require('./CSVReport.js');
 
+const SIMULATION_TIME = 400;
 var loadedModules = [];
-var monthlyDebt = new Array(360);
-var tangibleAssets = new Array(360);
+var monthlyDebt = new Array(SIMULATION_TIME);
+var tangibleAssets = new Array(SIMULATION_TIME);
 
 tangibleAssets.fill(0);
 monthlyDebt.fill(0);
@@ -155,19 +157,21 @@ function mining(modules, assets, debt, years, currentYear) {
 var options = require( "yargs" )
     .usage( "Usage: $0 [-c \"config file\"] [-r \"reporter\"]")
     .option( "c", { alias: "config", demand: true, describe: "Configuration", type: "string" } )
+	.option( "o", { alias: "output", demand: true, describe: "ouput csv file", type: "string" } )
     .help( "?" )
     .alias( "?", "help" )
     .epilog( "Copyright 2017 Andrés Estévez" )
     .argv;
 
 let report = new ConsoleReport();
+let csvReport = new CSVReport();
 var config = require(options.config);
-let duration = 360;
 
 initModules(config);
-runSimulation(duration);
+runSimulation(SIMULATION_TIME);
 
 let jsonreport = mining(loadedModules, tangibleAssets, monthlyDebt, 30, 2016)
 
 report.report(jsonreport);
-//report.summary(loadedModules, duration);
+csvReport.report(jsonreport, options.output);
+report.summary(loadedModules, SIMULATION_TIME);
