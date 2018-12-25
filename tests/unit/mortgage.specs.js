@@ -1,7 +1,3 @@
-"use strict";
-
-/// <reference path="../typings/mocha/mocha.d.ts"/>
-/// <reference path="../typings/node/node.d.ts"/>
 process.env.NODE_ENV = 'test';
 
 var testCase = require('mocha').describe;
@@ -13,7 +9,7 @@ const Mortgage = require('../../src/mortgage.js');
 const Account = require('../../src/account.js');
 
 describe('Evaluate payments for different mortgages', function () {
-	it('', function () {
+	it.skip('', function () {
 	})
 });
 
@@ -41,7 +37,7 @@ describe('Mortgage with partial amortizations extra', function () {
 		assert.equal(mortgage.values()[1].extra, 0);
 	});
 
-	it('Check status of the mortgage ', function() {
+	it.skip('Check status of the mortgage ', function() {
 		for (let i=0; i<272; i++) {
 			mortgage.step()
 			assert.equal(mortgage.status, "OPEN");
@@ -53,7 +49,7 @@ describe('Mortgage with partial amortizations extra', function () {
 
 	});
 
-	it('Evaluate data for last payment', function() {
+	it.skip('Evaluate data for last payment', function() {
 	})
 })
 
@@ -68,9 +64,9 @@ describe('Mortgage without partial amortizations', function () {
 	});
 
 	it('Get values after first iteration', function() {
-		mortgage.step() // month 0
-		mortgage.step() // month 1
-		let values = mortgage.values();
+		mortgage.step(); // month 0
+		mortgage.step(); // month 1
+		//let values = mortgage.values();
 		assert.equal(mortgage.values()[1].capital, 99769.09130588078);
 		assert.equal(mortgage.values()[1].payment, 330.90869411922023);
 		assert.equal(mortgage.values()[1].amortization, 230.90869411922176 );
@@ -80,7 +76,7 @@ describe('Mortgage without partial amortizations', function () {
 		assert.equal(mortgage.values()[1].extra, 0);
 	});
 
-	it('Check status of the mortgage ', function() {
+	it.skip('Check status of the mortgage ', function() {
 		let mortgage2 = new Mortgage(10000, 0.1, 0, 100, {} ,account);
 		for (let i=0; i<95; i++) {
 			mortgage2.step()
@@ -94,7 +90,7 @@ describe('Mortgage without partial amortizations', function () {
 		assert(mortgage2.status, "FINISHED");
 	});
 
-	it('Evaluate data for last payment', function() {
+	it.skip('Evaluate data for last payment', function() {
 	})
 
 });

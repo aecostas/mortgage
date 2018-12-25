@@ -1,4 +1,3 @@
-'use strict';
 const Property = require('./Property.js');
 
 class Life extends Property {

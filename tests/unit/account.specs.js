@@ -1,7 +1,3 @@
-"use strict";
-
-/// <reference path="../typings/mocha/mocha.d.ts"/>
-/// <reference path="../typings/node/node.d.ts"/>
 process.env.NODE_ENV = 'test';
 
 var testCase = require('mocha').describe;
@@ -13,6 +9,7 @@ const Account = require('../../src/account.js');
 
 describe('Account with initial amount', function () {
 	let account;
+
 	before(function() {
 		account = new Account("Account", 1000);
 	});

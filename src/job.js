@@ -1,5 +1,3 @@
-'use strict';
-
 class Job {
   constructor(name, account, salary, start) {
     this._name = name;

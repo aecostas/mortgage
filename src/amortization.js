@@ -1,22 +1,20 @@
-"use strict";
+import Account from './account.js';
+import Mortgage from './mortgage.js';
+import CouponStrategy from './couponstrategy.js';
+import Job from './job.js';
+import Car from './car.js';
+import House from './house.js';
 
-const Account = require('./account.js');
-const Mortgage = require('./mortgage.js');
-const CouponStrategy = require('./couponstrategy.js');
-const Job = require('./job.js');
-const Car = require('./car.js');
-const House = require('./house.js');
-
-var express = require('express');
+import express, { static } from 'express';
 var app = express();
-var json = require('express-json');
-var bodyParser = require('body-parser')
+import json from 'express-json';
+import { urlencoded } from 'body-parser';
 
 var loadedModules = []
 
 app.use(json());
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(static('public'));
+app.use(urlencoded({ extended: false }))
 
 /**
  * Calculates how a mortgage evolves with the time

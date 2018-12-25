@@ -1,6 +1,4 @@
-"use strict";
-
-const AccountMovement = require('./accountmovement.js')
+const AccountMovement = require('./accountmovement.js');
 
 class Account {
 
@@ -75,6 +73,6 @@ class Account {
   };
 }
 
-module.exports = Account
+// eslint-disable-next-line no-undef
+module.exports = Account;
 
-// TODO: return values with concepts

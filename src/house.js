@@ -1,5 +1,5 @@
-import Property from './Property.js';
-  
+const Property = require('./Property.js');
+
 class House extends Property {
 /**
   * @param Object expenses - Object with name, value, and type,
@@ -59,4 +59,4 @@ class House extends Property {
 
 }
 
-export default House;
+module.exports = House;

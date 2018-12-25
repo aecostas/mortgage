@@ -1,5 +1,3 @@
-'use strict';
-
 const Property = require('./Property.js');
 
 class Car extends Property{

@@ -3,6 +3,9 @@
 class Mortgage {
 
   constructor(mortgage, interest, start, term, partial_amortizations, account) {
+    this.STATUS_OPEN = 0;
+    this.STATUS_FINISHED = 1;
+
     this.N = term;
     this.currentMonth = 1;
     this.interest = interest;
@@ -14,7 +17,7 @@ class Mortgage {
     this.sumPayments = 0
     this.annualCPI = 0.02
     this.account = account
-    this._status = "OPEN";
+    this._status = this.STATUS_OPEN;
     this.partial_amortizations = partial_amortizations;
     this._name = "Mortgage";
   }// constructor
@@ -82,7 +85,7 @@ class Mortgage {
       return;
     }
 
-    if (this._status == "FINISHED") return;
+    if (this._status === this.STATUS_FINISHED) return;
 
     let extra = 0
     let a_n_new = this.amortized(this._payment, this.interest, this.currentMonth, this.currentMonth + this.N)
@@ -90,7 +93,7 @@ class Mortgage {
     let a_n = this.capital - a_n_new
     this.capital = a_n_new
 
-    for (var amort in this.partial_amortizations) {
+    for (let amort in this.partial_amortizations) {
       if (this.performPartialAmortization(this.partial_amortizations[amort], this.currentMonth)) {
         this.capital -= this.partial_amortizations[amort].amount
         let tempN = this.updateNumberOfPayments(this.capital, this._payment, this.interest);
@@ -104,7 +107,7 @@ class Mortgage {
 
     this.sumInterest += this._payment - a_n;
 
-    this.sumPayments += this._payment + extra
+    this.sumPayments += this._payment + extra;
 
     this.monthlyPayments.push({
       month: this.currentMonth,
@@ -121,10 +124,9 @@ class Mortgage {
 
     this.N -= 1
     if (this.N == 0) {
-      this._status = "FINISHED"
+      this._status = this.STATUS_FINISHED;
     }
 
-    //      this.currentMonth +=1
   }
 
   values() {
@@ -137,15 +139,6 @@ class Mortgage {
     } else {
       return this.capital;
     }
-  }
-
-
-  /**
-  * Returns the status of the mortgage: OPEN if there is
-  * any pending capital; FINISHED otherwise
-  */
-  get status() {
-    return this._status
   }
 
   /**

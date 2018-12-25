@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Represent a movement in a bank account
  *
@@ -48,4 +46,4 @@ class AccountMovement {
     }
 }
 
-module.exports = AccountMovement
+module.exports = AccountMovement;

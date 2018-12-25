@@ -1,8 +1,5 @@
-'use strict';
-
-var colors = require('colors');
-var Table = require('cli-table');
-
+const colors = require('colors');
+const Table = require('cli-table');
 const Account = require('./account.js');
 
 class ConsoleReport {
@@ -16,7 +13,7 @@ class ConsoleReport {
 		return output;
 	}
 
-	report(data, currentYear) {
+	report(data/*, currentYear*/) {
 		let _this = this;
 		let header = [];
 		header.push('Month');
@@ -52,7 +49,7 @@ class ConsoleReport {
 	}
 
 	summary(modules, duration) {
-		for (module of modules) {
+		for (let module of modules) {
 			let values;
 			let total;
 			let yearly;
