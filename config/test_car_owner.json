@@ -1,68 +1,104 @@
 [
-  {
-    "type":"account",
-    "data": {
-      "name": "Cuenta principal",
-      "amount": 10000
-    }
-  },
-  {
-	"type":"job",
-	"data": {
-	  "name": "Main job",
-	  "salary": 1700,
-	  "start": 1
-	}
-  },
-  {
-	"type":"life",
-	"expenses": {
-	  "holidays": 1000,
-	  "food": 400,
-	  "general": 100
-	}
-  },
-  {
-	"type": "house",
-	"data": {
-	  "name": "Main house",
-	  "price": 135000,
-	  "incoming": 0,
-	  "start": 1
+	{
+		"type":"account",
+		"data": {
+			"name": "Cuenta principal",
+			"amount": 3000
+		}
 	},
-	"expenses": {
-	  "insurance": 200,
-	  "community": 50,
-	  "general": 400,
-	  "energy": 40,
-	  "water": 50,
-	  "sewerage": 50
+	{
+		"type":"job",
+		"data": {
+			"name": "Main job",
+			"salary": 1700,
+			"start": 1
+		}
+	},
+	{
+		"type":"job",
+		"data": {
+			"name": "Tania",
+			"salary": 1300,
+			"start": 1
+		}
+	},
+	{
+		"type":"life",
+		"expenses": {
+			"holidays": 1500,
+			"food": 400,
+			"general": 150
+		}
+	},
+	{
+		"type": "house",
+		"data": {
+			"name": "Main house",
+			"price": 135000,
+			"incoming": 0,
+			"start": 1
+		},
+		"expenses": {
+			"insurance": 200,
+			"community": 50,
+			"general": 400,
+			"energy": 40,
+			"water": 50,
+			"sewerage": 50
+		}
+	},
+	{
+		"type":"car",
+		"data": {
+			"name": "Renault Megane",
+			"price": 3000,
+			"incoming": 0,
+			"start": 1,
+			"stop": 360,
+			"decay": 0.9
+		},
+		"expenses": {
+			"taxes": 100,
+			"general": 200,
+			"fuel": 35,
+			"insurance": 400,
+			"rent": 0
+		}
+	},
+	{
+		"type":"car",
+		"data": {
+			"name": "VW Touran",
+			"price": 18000,
+			"incoming": 6000,
+			"start": 25,
+			"stop": 144,
+			"decay": 0.9
+		},
+		"expenses": {
+			"taxes": 100,
+			"general": 200,
+			"fuel": 35,
+			"insurance": 400,
+			"rent": 0
+		}
+	},
+	{
+		"type": "mortgage",
+		"data": {
+			"mortgage": 12000,
+			"interest": 10,
+			"term": 48,
+			"start": 25
+		}
+	},
+	{
+		"type": "mortgage",
+		"data": {
+			"mortgage": 100000,
+			"interest": 1,
+			"term": 360,
+			"start": 2
+		}
 	}
-  },
-  {
-    "type":"car",
-    "data": {
-      "name": "C4 Grand Picasso",
-      "price": 24000,
-      "incoming": 10000,
-      "start": 25,
-      "stop": 144
-    },
-    "expenses": {
-      "taxes": 100,
-      "general": 200,
-      "fuel": 35,
-      "insurance": 400,
-      "rent": 0
-    }
-  },
-  {
-    "type": "mortgage",
-    "data": {
-      "mortgage": 15000,
-      "interest": 7,
-      "term": 84,
-	  "start": 25
-    }
-  }
 ]

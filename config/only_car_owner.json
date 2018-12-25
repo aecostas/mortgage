@@ -1,0 +1,27 @@
+[
+	{
+		"type":"account",
+		"data": {
+			"name": "Cuenta principal",
+			"amount": 0
+		}
+	},
+	{
+		"type":"car",
+		"data": {
+			"name": "VW Touran",
+			"price": 18000,
+			"incoming": 6000,
+			"start": 25,
+			"stop": 144,
+			"decay": 0.9
+		},
+		"expenses": {
+			"taxes": 100,
+			"general": 200,
+			"fuel": 35,
+			"insurance": 400,
+			"rent": 0
+		}
+	}
+]

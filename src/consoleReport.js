@@ -32,8 +32,10 @@ class ConsoleReport {
 			head: header
 		});
 
-		for (let row of data) {
+//		for (let row of data) {
+		for (let i=0; i<100; i++) {
 			let tablerow = [];
+			let row = data[i];
 
 			tablerow.push(row.month);
 			tablerow.push(row.date);

@@ -1,7 +1,5 @@
-'use strict';
-
-const Property = require('./Property.js');
-
+import Property from './Property.js';
+  
 class House extends Property {
 /**
   * @param Object expenses - Object with name, value, and type,
@@ -51,6 +49,7 @@ class House extends Property {
   }
 
   getCurrentPrice() {
+	  console.warn('getting value for house');
     if (this.isActive()) {
       return this.price;
     } else {
@@ -60,4 +59,4 @@ class House extends Property {
 
 }
 
-module.exports = House;
+export default House;

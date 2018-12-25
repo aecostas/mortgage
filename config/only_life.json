@@ -1,0 +1,17 @@
+[
+	{
+		"type":"account",
+		"data": {
+			"name": "Cuenta principal",
+			"amount": 3000
+		}
+	},
+	{
+		"type":"life",
+		"expenses": {
+			"holidays": 1000,
+			"food": 400,
+			"general": 100
+		}
+	}
+]

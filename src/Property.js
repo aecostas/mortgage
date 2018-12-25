@@ -6,7 +6,7 @@ class Property {
   * @param Object expenses - Object with name, value, and type,
   *  where type in (monthly, yearly)
   */
-  constructor(name, account, start, stop, incoming, price, expenses, decay=1) {
+  constructor(name, account, start, stop, incoming, price, expenses, decay = 1) {
     this._name = name;
     this.account = account;
     this.month = 0;
@@ -14,17 +14,17 @@ class Property {
     this._start = start;
     this._stop = stop;
     this.incoming = incoming;
-	this.decay = decay;
+    this.decay = decay;
     this.monthlyExpenses = expenses.filter((item) => { return item.type === 'monthly' });
     this.yearlyExpenses = expenses.filter((item) => { return item.type === 'yearly' });
   }
 
   get start() {
-	  return this._start;
+    return this._start;
   }
 
   get stop() {
-	  return this._stop;
+    return this._stop;
   }
 
   get name() {
@@ -32,11 +32,11 @@ class Property {
   }
 
   set expenses(total) {
-	  this._expenses = total;
+    this._expenses = total;
   }
 
   get expenses() {
-	  return this._expenses;
+    return this._expenses;
   }
 
   /**
@@ -44,19 +44,19 @@ class Property {
   * taking into account its devaluation function
   */
   getCurrentValue() {
-	  if (this.isActive()) {
-		return this.price*Math.pow(this.decay, (this.month - this.start)/12);
-  	} else {
-		return 0;
-  	}
+    if (this.isActive()) {
+      return this.price * Math.pow(this.decay, (this.month - this.start) / 12);
+    } else {
+      return 0;
+    }
   }
 
   isActive() {
-      if ((this.month < this._start) || (this.month > this._stop)) {
-        return false;
-      } else {
-        return true;
-      }
+    if ((this.month < this._start) || (this.month > this._stop)) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   step() {

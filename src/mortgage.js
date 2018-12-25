@@ -4,11 +4,11 @@ class Mortgage {
 
   constructor(mortgage, interest, start, term, partial_amortizations, account) {
     this.N = term;
-    this.currentMonth=1;
+    this.currentMonth = 1;
     this.interest = interest;
     this.capital = mortgage;
-	this.start = start;
-    this._payment = this.capital*interest/(100*(1 - Math.pow((1+interest/100), -term) ));
+    this.start = start;
+    this._payment = this.capital * interest / (100 * (1 - Math.pow((1 + interest / 100), -term)));
     this.monthlyPayments = []
     this.sumInterest = 0
     this.sumPayments = 0
@@ -41,7 +41,7 @@ class Mortgage {
   * @param {float} interest - Monthly interest (example: 1.2/12)
   */
   updateNumberOfPayments(pending, payment, interest) {
-    let N=-1* Math.log( 1 - pending*interest/(payment*100)) / (Math.log(1 + interest/100))
+    let N = -1 * Math.log(1 - pending * interest / (payment * 100)) / (Math.log(1 + interest / 100))
     return Math.ceil(N)
   }
 
@@ -55,109 +55,108 @@ class Mortgage {
   * @return {float} Amortized capital
   */
   amortized(payment, interest, paidmonths, numberofpayments) {
-    let value = payment * (1 - Math.pow(1+interest/100.0, paidmonths-numberofpayments )) / (interest/100.0)
+    let value = payment * (1 - Math.pow(1 + interest / 100.0, paidmonths - numberofpayments)) / (interest / 100.0)
     return value
   }
 
-    /**
-    * Checks if the a partial amortization has to be
-    * done in the current month, according to the given rules
-    * @param {int} currentMonth -
-    * @param {object} partial_amortization -
-    */
-    performPartialAmortization(partial_amortization, currentMonth) {
-      if (currentMonth == 0) {
-        return false
-      }
-      return ((partial_amortization.type == "periodic") &&
+  /**
+  * Checks if the a partial amortization has to be
+  * done in the current month, according to the given rules
+  * @param {int} currentMonth -
+  * @param {object} partial_amortization -
+  */
+  performPartialAmortization(partial_amortization, currentMonth) {
+    if (currentMonth == 0) {
+      return false
+    }
+    return ((partial_amortization.type == "periodic") &&
       ((currentMonth % partial_amortization.period) == 0)) ||
       ((partial_amortization.type == "extra") &&
-      (currentMonth == partial_amortization.month))
+        (currentMonth == partial_amortization.month))
+  }
+
+  step() {
+    this.currentMonth += 1;
+
+    if (this.currentMonth < this.start) {
+      return;
     }
 
-    step() {
-	  this.currentMonth += 1;
+    if (this._status == "FINISHED") return;
 
-	  if (this.currentMonth < this.start) {
-		  return;
-	  }
+    let extra = 0
+    let a_n_new = this.amortized(this._payment, this.interest, this.currentMonth, this.currentMonth + this.N)
+    // TODO: should a_n be calculated before performing amortizations
+    let a_n = this.capital - a_n_new
+    this.capital = a_n_new
 
-      if (this._status=="FINISHED") return;
+    for (var amort in this.partial_amortizations) {
+      if (this.performPartialAmortization(this.partial_amortizations[amort], this.currentMonth)) {
+        this.capital -= this.partial_amortizations[amort].amount
+        let tempN = this.updateNumberOfPayments(this.capital, this._payment, this.interest);
+        this.N = tempN
+        extra += this.partial_amortizations[amort].amount
 
-      let extra=0
-      let a_n_new = this.amortized(this._payment, this.interest, this.currentMonth, this.currentMonth + this.N)
-      // TODO: should a_n be calculated before performing amortizations
-      let a_n = this.capital - a_n_new
-      this.capital = a_n_new
-
-      for (var amort in this.partial_amortizations) {
-        if (this.performPartialAmortization(this.partial_amortizations[amort], this.currentMonth)) {
-          this.capital -= this.partial_amortizations[amort].amount
-          let tempN = this.updateNumberOfPayments(this.capital, this._payment, this.interest);
-          this.N = tempN
-          extra += this.partial_amortizations[amort].amount
-
-          // discount this amount from the savings
-          this.account.extract(this._name, "Partial amortization", this.partial_amortizations[amort].amount)
-        }
+        // discount this amount from the savings
+        this.account.extract(this._name, "Partial amortization", this.partial_amortizations[amort].amount)
       }
-
-      this.sumInterest+=this._payment - a_n;
-
-      this.sumPayments += this._payment + extra
-
-      this.monthlyPayments.push({
-        month: this.currentMonth,
-        capital: this.capital,
-        payment: this._payment,
-        amortization: a_n,
-        interest: this._payment - a_n,
-        sumInterest: this.sumInterest,
-        sumPayments: this.sumPayments,
-        extra: extra
-      });
-
-      this.account.extract(this._name, "Monthly mortgage payment", this._payment)
-
-      this.N -= 1
-      if (this.N == 0) {
-        this._status = "FINISHED"
-      }
-
-//      this.currentMonth +=1
     }
 
-    values() {
-      return this.monthlyPayments;
+    this.sumInterest += this._payment - a_n;
+
+    this.sumPayments += this._payment + extra
+
+    this.monthlyPayments.push({
+      month: this.currentMonth,
+      capital: this.capital,
+      payment: this._payment,
+      amortization: a_n,
+      interest: this._payment - a_n,
+      sumInterest: this.sumInterest,
+      sumPayments: this.sumPayments,
+      extra: extra
+    });
+
+    this.account.extract(this._name, "Monthly mortgage payment", this._payment)
+
+    this.N -= 1
+    if (this.N == 0) {
+      this._status = "FINISHED"
     }
 
-    getPendingCapital() {
-		if (this.currentMonth < this.start) {
-			return 0;
-		} else {
-			return this.capital;
-		}
+    //      this.currentMonth +=1
+  }
+
+  values() {
+    return this.monthlyPayments;
+  }
+
+  getPendingCapital() {
+    if (this.currentMonth < this.start) {
+      return 0;
+    } else {
+      return this.capital;
     }
+  }
 
 
+  /**
+  * Returns the status of the mortgage: OPEN if there is
+  * any pending capital; FINISHED otherwise
+  */
+  get status() {
+    return this._status
+  }
 
-    /**
-    * Returns the status of the mortgage: OPEN if there is
-    * any pending capital; FINISHED otherwise
-    */
-    get status() {
-      return this._status
-    }
+  /**
+  * Returns the calculated monthly payment
+  * for this mortgage
+  */
+  get payment() {
+  }
 
-    /**
-    * Returns the calculated monthly payment
-    * for this mortgage
-    */
-    get payment() {
-    }
+}// class Mortgage
 
-  }// class Mortgage
-
-  module.exports = Mortgage
+module.exports = Mortgage
 
   // TODO: risk analysis of the mortgage

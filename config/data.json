@@ -19,21 +19,21 @@
     "expenses": {
       "holidays": 1000,
       "food": 350,
-      "general": 100
+      "general": 300
     }
   },
   {
     "type":"car",
     "data": {
-      "name": "C4 Grand Picasso",
-      "price": 24000,
-      "incoming": 10000,
+      "name": "VW Touran",
+      "price": 18000,
+      "incoming": 6000,
       "start": 13
     },
     "expenses": {
       "taxes": 100,
       "general": 200,
-      "fuel": 35,
+      "fuel": 55,
       "insurance": 400,
       "rent": 0
     }
