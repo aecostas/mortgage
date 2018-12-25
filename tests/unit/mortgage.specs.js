@@ -59,7 +59,7 @@ describe('Mortgage without partial amortizations', function () {
 
 	before(function() {
 		account = new Account("Main account", 0);
-		mortgage = new Mortgage(100000, 1.2/12, 0, 30*12, {}, account);
+		mortgage = new Mortgage(100000, 1.2/12, 0, 30*12, [], account);
 		//mortgage, interest, start, term, partial_amortizations, account
 	});
 

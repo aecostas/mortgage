@@ -49,7 +49,7 @@ function initModules(config) {
           module.data.interest / 12,
           module.data.start,
           module.data.term,
-          {},
+          [],
           loadedModules[0]
         );
         loadedModules.push(mortgage);

@@ -34,7 +34,7 @@ class Mortgage {
   * @param {string} type - Type of interest evolution (constant, exponential)
   */
   setMonthlyInterest() {
-    return []
+    return [];
   }
 
   /**
@@ -44,8 +44,8 @@ class Mortgage {
   * @param {float} interest - Monthly interest (example: 1.2/12)
   */
   updateNumberOfPayments(pending, payment, interest) {
-    let N = -1 * Math.log(1 - pending * interest / (payment * 100)) / (Math.log(1 + interest / 100))
-    return Math.ceil(N)
+    let N = -1 * Math.log(1 - pending * interest / (payment * 100)) / (Math.log(1 + interest / 100));
+    return Math.ceil(N);
   }
 
   /**
@@ -93,15 +93,15 @@ class Mortgage {
     let a_n = this.capital - a_n_new
     this.capital = a_n_new
 
-    for (let amort in this.partial_amortizations) {
-      if (this.performPartialAmortization(this.partial_amortizations[amort], this.currentMonth)) {
-        this.capital -= this.partial_amortizations[amort].amount
+    for (let amortization of this.partial_amortizations) {
+      if (this.performPartialAmortization(amortization, this.currentMonth)) {
+        this.capital -= amortization.amount
         let tempN = this.updateNumberOfPayments(this.capital, this._payment, this.interest);
-        this.N = tempN
-        extra += this.partial_amortizations[amort].amount
+        this.N = tempN;
+        extra += amortization.amount;
 
         // discount this amount from the savings
-        this.account.extract(this._name, "Partial amortization", this.partial_amortizations[amort].amount)
+        this.account.extract(this._name, "Partial amortization", amortization.amount)
       }
     }
 
