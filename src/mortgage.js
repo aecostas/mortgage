@@ -7,7 +7,7 @@ class Mortgage {
     this.STATUS_FINISHED = 1;
 
     this.N = term;
-    this.currentMonth = 1;
+    this.currentMonth = 0;
     this.interest = interest;
     this.capital = mortgage;
     this.start = start;

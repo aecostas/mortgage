@@ -53,17 +53,43 @@ describe('Mortgage with partial amortizations extra', function () {
 	})
 })
 
+describe('Skipping period', function () {
+	let account;
+
+	before(function() {
+		account = new Account("Main account", 0);
+	});
+
+	it('Get values before starting the process', function() {
+		let mortgage = new Mortgage(100000, 1.2/12, 3, 30*12, [], account);
+		mortgage.step(); // month 0
+		mortgage.step(); // month 1
+		assert.equal(mortgage.values().length, 0);
+	});
+
+	it('Get values just after skipping period', function() {
+		let mortgage = new Mortgage(100000, 1.2/12, 3, 30*12, [], account);
+		mortgage.step(); // month 0
+		mortgage.step(); // month 1
+		mortgage.step(); // month 2
+
+		assert.notEqual(mortgage.values().length, 0);
+	});
+});
+
 describe('Mortgage without partial amortizations', function () {
 	let mortgage;
 	let account;
 
 	before(function() {
 		account = new Account("Main account", 0);
-		mortgage = new Mortgage(100000, 1.2/12, 0, 30*12, [], account);
-		//mortgage, interest, start, term, partial_amortizations, account
 	});
 
+
+
 	it('Get values after first iteration', function() {
+		mortgage = new Mortgage(100000, 1.2/12, 0, 30*12, [], account);
+
 		mortgage.step(); // month 0
 		mortgage.step(); // month 1
 		//let values = mortgage.values();
