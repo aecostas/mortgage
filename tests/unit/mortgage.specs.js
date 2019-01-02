@@ -1,12 +1,9 @@
 process.env.NODE_ENV = 'test';
 
-var testCase = require('mocha').describe;
-var pre = require('mocha').before;
-var assertions = require('mocha').it;
-var assert = require('assert');
+const assert = require('assert');
 
-const Mortgage = require('../../src/mortgage.js');
 const Account = require('../../src/account.js');
+const Mortgage = require('../../src/mortgage.js');
 
 describe('Evaluate payments for different mortgages', function () {
 	it.skip('', function () {
