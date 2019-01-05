@@ -15,7 +15,14 @@ describe('Deposit with interest payment at the end', function () {
         let duration = 12;
         let interest = 0.01;
         let spy = sinon.spy(account, 'extract');
-        let deposit = new Deposit('deposit name', account, initialAmount, startMonth, duration, interest);
+        let deposit = new Deposit(
+            'deposit name', 
+            account, 
+            initialAmount, 
+            startMonth, 
+            duration, 
+            interest,
+            Deposit.INTEREST_END);
         deposit.step();
         assert.equal(spy.firstCall.lastArg, initialAmount);
     });
@@ -27,7 +34,7 @@ describe('Deposit with interest payment at the end', function () {
         let duration = 12;
         let interest = 0.01;
         let spy = sinon.spy(account, 'deposit');
-        let deposit = new Deposit('deposit name', account, initialAmount, startMonth, duration, interest);
+        let deposit = new Deposit('deposit name', account, initialAmount, startMonth, duration, interest, Deposit.INTEREST_END);
         let steps = 13;
 
         while (steps--) {
@@ -45,7 +52,7 @@ describe('Deposit with interest payment at the end', function () {
         let duration = 12;
         let interest = 0.01;
         let spy = sinon.spy(account, 'deposit');
-        let deposit = new Deposit('deposit name', account, initialAmount, startMonth, duration, interest);
+        let deposit = new Deposit('deposit name', account, initialAmount, startMonth, duration, interest, Deposit.INTEREST_END);
         let steps = 13;
 
         while (steps--) {
