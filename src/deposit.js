@@ -22,6 +22,7 @@ class Deposit {
         this.getLiquidations = this.getLiquidationsMonthly;
         break;
       case Deposit.INTEREST_QUARTER:
+        this.getLiquidations = this.getLiquidationsQuarterly;
         break;
     }
   }
@@ -30,9 +31,23 @@ class Deposit {
     return this._name;
   }
 
+  getLiquidationsQuarterly() {
+    let liquidations = [];
+
+    if ((this.month - this.start) % 4 === 0) {
+      liquidations.push(["Deposit interests", (this.initialAmount * this.interest) * (this.duration / 12) * (1 - this.widthholding) * 4 / this.duration]);
+    }
+
+    if (this.month === this.start + this.duration) {
+      liquidations.push(["Deposit ends", this.initialAmount]);
+    }
+
+    return(liquidations);
+  }
+
   getLiquidationsMonthly() {
     let liquidations = [
-      ["Deposit interests", (this.initialAmount * this.interest) * (1 - this.widthholding) / this.duration]
+      ["Deposit interests", (this.initialAmount * this.interest) * (this.duration / 12) * (1 - this.widthholding) / this.duration]
     ]
 
     if (this.month === this.start + this.duration) {
@@ -47,7 +62,7 @@ class Deposit {
       return( 
         [
           ["Deposit ends", this.initialAmount],
-          ["Deposit interests", (this.initialAmount * this.interest) * (1 - this.widthholding)]
+          ["Deposit interests", (this.initialAmount * this.interest) * (this.duration / 12) * (1 - this.widthholding)]
         ]
       );
     }
