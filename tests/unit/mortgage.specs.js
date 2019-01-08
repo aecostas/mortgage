@@ -82,8 +82,6 @@ describe('Mortgage without partial amortizations', function () {
 		account = new Account("Main account", 0);
 	});
 
-
-
 	it('Get values after first iteration', function() {
 		mortgage = new Mortgage(100000, 1.2/12, 0, 30*12, [], account);
 
