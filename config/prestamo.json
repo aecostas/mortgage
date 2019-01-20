@@ -1,0 +1,18 @@
+[
+  {
+    "type":"account",
+    "data": {
+      "name": "Cuenta principal",
+      "amount": 0
+    }
+  },
+  {
+    "type": "mortgage",
+    "data": {
+      "mortgage": 10000,
+      "interest": 1,
+      "term": 36,
+	  "start": 10
+    }
+  }
+]

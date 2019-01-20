@@ -85,7 +85,10 @@ class Mortgage {
       return;
     }
 
-    if (this._status === this.STATUS_FINISHED) return;
+    if (this._status === this.STATUS_FINISHED) {
+      this.capital = 0;
+      return;
+    }
 
     let extra = 0
     let a_n_new = this.amortized(this._payment, this.interest, this.currentMonth, this.currentMonth + this.N)
