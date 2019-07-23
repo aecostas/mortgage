@@ -137,8 +137,18 @@ function mining(modules, assets, debt, years, currentYear) {
           data.diff = diff;
           data.assets = assets[currentMonth];
           data.debt = debt[currentMonth];
-          data.assets_money_over_debt = ((currentAccountMoney + assets[currentMonth]) / debt[currentMonth]) * 100;
-          data.debt_over_incomes = (Math.abs(totalMonthDebt) / totalIncomes) * 100;
+
+          if (debt[currentMonth] === 0) {
+            data.assets_money_over_debt = 0;
+          } else {
+            data.assets_money_over_debt = ((currentAccountMoney + assets[currentMonth]) / debt[currentMonth]) * 100;
+          }
+          
+          if (totalIncomes === 0) {
+            data.debt_over_incomes = 0;
+          } else {
+            data.debt_over_incomes = (Math.abs(totalMonthDebt) / totalIncomes) * 100;
+          }
 
           monthlyData.push(data);
           prev = currentAccountMoney;
@@ -161,12 +171,12 @@ var options = require("yargs")
 
 let report = new ConsoleReport();
 let csvReport = new CSVReport();
-console.log('config: ', options.config)
 
 var config = require(options.config);
 
 initModules(config);
 runSimulation(SIMULATION_TIME);
+
 
 let jsonreport = mining(loadedModules, tangibleAssets, monthlyDebt, 30, 2016)
 
