@@ -21,7 +21,8 @@ monthlyDebt.fill(0);
 function runSimulation(duration) {
 
   for (let month = 0; month < duration; month++) {
-    loadedModules.forEach(function (module) {
+
+    for (const module of loadedModules) {
       module.step();
 
       if (module instanceof Property) {
@@ -31,8 +32,8 @@ function runSimulation(duration) {
       if (module instanceof Mortgage) {
         monthlyDebt[month] += module.getPendingCapital();
       }
-    });
-  }// for
+    }
+  }
 }
 
 function initModules(config) {
@@ -107,34 +108,34 @@ function initModules(config) {
 function mining(modules, assets, debt, years, currentYear) {
   let monthlyData = [];
 
-  modules.forEach(function (module) {
+  for (let module of modules) {
+
     if (module instanceof Account) {
       let values = module.values();
-      let prev = values[0];
+      let prevAccountMoney = values[0];
 
       for (let year = 0; year < years; year++) {
-        for (let month = 1; month <= 12; month += 1) {
-          let currentMonth = year * 12 + month;
-          let currentAccountMoney = values[currentMonth];
-          let diff = currentAccountMoney - prev;
-          // calculate incomes for this month
-          // TODO: review this implementation
-          let incomes = module.movements.filter((item) => {
-            return item.amount > 0 && item.month == currentMonth;
-          });
-          let totalIncomes = incomes.reduce((acc, value) => acc + value.amount, 0);
+        for (let month = 1; month <= 12; month++) {
+          const currentMonth = year * 12 + month;
+          const currentAccountMoney = values[currentMonth];
 
-          // TODO: replace 'Mortgage' with a type/class
-          let monthDebt = module.movements.filter((item) => {
-            return item.peer == 'Mortgage' && item.month == currentMonth;
-          });
-          let totalMonthDebt = monthDebt.reduce((acc, value) => acc + value.amount, 0);
+          const isMonthIncome = (item) => item.amount > 0 && item.month == currentMonth;
+          const isMonthPayment = (item) => item.peer == 'Mortgage' && item.month == currentMonth;
+          const sumAllAmounts = (acc, value) => acc + value.amount;
+            
+          const totalIncomes = module.movements
+            .filter(isMonthIncome)
+            .reduce(sumAllAmounts, 0);
+  
+          const totalMonthDebt = module.movements
+            .filter(isMonthPayment)
+            .reduce(sumAllAmounts, 0);
 
           let data = {}
           data.month = currentMonth;
           data.date = month + '/' + (currentYear + year);
           data.money = currentAccountMoney;
-          data.diff = diff;
+          data.diff = currentAccountMoney - prevAccountMoney;
           data.assets = assets[currentMonth];
           data.debt = debt[currentMonth];
 
@@ -143,7 +144,7 @@ function mining(modules, assets, debt, years, currentYear) {
           } else {
             data.assets_money_over_debt = ((currentAccountMoney + assets[currentMonth]) / debt[currentMonth]) * 100;
           }
-          
+
           if (totalIncomes === 0) {
             data.debt_over_incomes = 0;
           } else {
@@ -151,11 +152,11 @@ function mining(modules, assets, debt, years, currentYear) {
           }
 
           monthlyData.push(data);
-          prev = currentAccountMoney;
+          prevAccountMoney = currentAccountMoney;
         }
       }
     }
-  });
+  }
 
   return monthlyData;
 }
@@ -176,7 +177,6 @@ var config = require(options.config);
 
 initModules(config);
 runSimulation(SIMULATION_TIME);
-
 
 let jsonreport = mining(loadedModules, tangibleAssets, monthlyDebt, 30, 2016)
 
