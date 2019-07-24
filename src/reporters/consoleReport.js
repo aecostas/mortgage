@@ -1,6 +1,6 @@
 const colors = require('colors');
 const Table = require('cli-table');
-const Account = require('./account.js');
+const Account = require('../modules/account.js');
 
 class ConsoleReport {
 

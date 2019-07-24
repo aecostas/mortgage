@@ -1,14 +1,14 @@
 /* eslint-disable no-undef */
-const Account = require('./account.js');
-const Mortgage = require('./mortgage.js');
-const Job = require('./job.js');
-const Car = require('./car.js');
-const House = require('./house.js');
-const Life = require('./life.js');
-const Property = require('./Property.js');
+const Account = require('./modules/account.js');
+const Mortgage = require('./modules/mortgage.js');
+const Job = require('./modules/job.js');
+const Car = require('./modules/car.js');
+const House = require('./modules/house.js');
+const Life = require('./modules/life.js');
+const Property = require('./modules/Property.js');
 
-const ConsoleReport = require('./consoleReport.js');
-const CSVReport = require('./CSVReport.js');
+const ConsoleReport = require('./reporters/consoleReport.js');
+const CSVReport = require('./reporters/CSVReport.js');
 
 const SIMULATION_TIME = 400;
 var loadedModules = [];
@@ -170,7 +170,7 @@ var options = require("yargs")
   .epilog("Copyright 2017 Andrés Estévez")
   .argv;
 
-let report = new ConsoleReport();
+let consoleReport = new ConsoleReport();
 let csvReport = new CSVReport();
 
 var config = require(options.config);
@@ -180,6 +180,7 @@ runSimulation(SIMULATION_TIME);
 
 let jsonreport = mining(loadedModules, tangibleAssets, monthlyDebt, 30, 2016)
 
-report.report(jsonreport);
+consoleReport.report(jsonreport);
 csvReport.report(jsonreport, options.output);
-report.summary(loadedModules, SIMULATION_TIME);
+
+consoleReport.summary(loadedModules, SIMULATION_TIME);
