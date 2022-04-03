@@ -15,7 +15,6 @@ class Mortgage {
     this.monthlyPayments = []
     this.sumInterest = 0
     this.sumPayments = 0
-    this.annualCPI = 0.02
     this.account = account
     this._status = this.STATUS_OPEN;
     this.partial_amortizations = partial_amortizations;
@@ -24,17 +23,6 @@ class Mortgage {
 
   get name() {
     return this._name;
-  }
-
-  /**
-  * Returns an array with the interest updated according
-  * to the euribor changes
-  * @param {int} differential - constant
-  * @param {string} frequency - Update frequency (monthly, quarterly, yearly)
-  * @param {string} type - Type of interest evolution (constant, exponential)
-  */
-  setMonthlyInterest() {
-    return [];
   }
 
   /**
@@ -142,13 +130,6 @@ class Mortgage {
     } else {
       return this.capital;
     }
-  }
-
-  /**
-  * Returns the calculated monthly payment
-  * for this mortgage
-  */
-  get payment() {
   }
 
 }// class Mortgage
