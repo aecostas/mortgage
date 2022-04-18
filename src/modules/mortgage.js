@@ -86,13 +86,22 @@ class Mortgage {
 
     for (let amortization of this.partial_amortizations) {
       if (this.performPartialAmortization(amortization, this.currentMonth)) {
-        this.capital -= amortization.amount
+        let amount;
+
+        if (this.capital < amortization.amount) {
+          amount = this.capital
+        } else {
+          amount = amortization.amount
+        }
+
+        this.capital -= amount
+
         let tempN = this.updateNumberOfPayments(this.capital, this._payment, this.interest);
         this.N = tempN;
-        extra += amortization.amount;
+        extra += amount;
 
         // discount this amount from the savings
-        this.account.extract(this._name, "Partial amortization", amortization.amount)
+        this.account.extract(this._name, "Partial amortization", amount)
       }
     }
 
@@ -114,7 +123,7 @@ class Mortgage {
     this.account.extract(this._name, "Monthly mortgage payment", this._payment)
 
     this.N -= 1
-    if (this.N == 0) {
+    if (this.N == 0 || this.capital === 0) {
       this._status = this.STATUS_FINISHED;
     }
 
@@ -132,7 +141,7 @@ class Mortgage {
     }
   }
 
-}// class Mortgage
+} // class Mortgage
 
 module.exports = Mortgage
 

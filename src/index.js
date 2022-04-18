@@ -45,12 +45,22 @@ function initModules(config) {
         break;
 
       case 'mortgage':
+
+        const partialAmortizations = [
+          {
+            type:"periodic",
+            period: 6,
+            amount: 10000
+          }
+        ]
+
+        
         let mortgage = new Mortgage(
           module.data.mortgage,
           module.data.interest / 12,
           module.data.start,
           module.data.term,
-          [],
+          partialAmortizations,
           loadedModules[0]
         );
         loadedModules.push(mortgage);
